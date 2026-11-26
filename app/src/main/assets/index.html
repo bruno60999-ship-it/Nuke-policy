@@ -1,0 +1,2379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Política Nuclear</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;overflow:hidden;background:#071019;color:#e8e4d8;font-family:"Trebuchet MS",Arial,sans-serif;font-size:12px}
+canvas{position:fixed;left:0;top:0;width:100%;height:100%;touch-action:none;display:block}
+.box{background:rgba(10,16,18,.86);border:1px solid #2c3a3a;border-radius:4px}
+.lbl{color:#7f8c8a;font-size:9px;letter-spacing:1px;text-transform:uppercase}
+.gold{color:#e0b04a}
+#left{position:fixed;left:6px;top:6px;width:min(200px,46vw)}
+#hud{padding:6px 7px}
+#hud .r{display:flex;justify-content:space-between;margin-top:3px;font-size:11px}
+#hud b{font-weight:bold}
+#tbar{height:5px;background:#243030;margin-top:2px;border-radius:2px;overflow:hidden}
+#tfill{height:100%;background:#7bc86c;width:50%}
+#btns{display:flex;gap:4px;margin-top:5px}
+#btns button{flex:1;padding:6px 2px;font-size:11px}
+button{font-family:inherit;background:#1d2b2a;border:1px solid #3a4c4a;color:#e8e4d8;border-radius:4px;padding:6px 10px;font-size:12px}
+button:active{background:#2d4240}
+button.pri{background:#e8503a;border-color:#e8503a;color:#fff;font-weight:bold}
+button.on{border-color:#e0b04a;color:#e0b04a;background:#2a2a18}
+button:disabled{opacity:.4}
+#rank{position:fixed;right:6px;top:6px;width:min(170px,40vw);padding:5px 7px;font-size:10px}
+#rank div{display:flex;justify-content:space-between;line-height:14px;white-space:nowrap}
+#rank i{display:inline-block;width:8px;height:8px;margin-right:4px}
+#rank .me{color:#ffcf7a;font-weight:bold}
+#bottom{position:fixed;left:0;right:0;bottom:0;padding:0 6px 6px}
+#info{display:none;padding:5px 8px;margin-bottom:4px;max-height:28vh;overflow-y:auto;line-height:1.3}
+#info h4{margin:0 0 2px;font-size:13px;color:#ffcf7a}
+#info .d{color:#c9c5b8;font-size:10.5px;margin:1px 0}
+#info .s{color:#8fd0ff;font-size:11px;margin:2px 0}
+#info .e{color:#ff8b7a;font-size:11px;margin:3px 0;font-weight:bold}
+#info .o{color:#9be58f;font-size:11px;margin:3px 0}
+#info .row{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+#ctl{display:flex;align-items:center;gap:6px;padding:5px 7px;margin-bottom:5px}
+#ctl input{flex:1;min-width:60px}
+#modes{display:flex;gap:3px}
+#modes button{padding:5px 6px;font-size:11px}
+#bar{display:flex;gap:4px;overflow-x:auto;padding:4px;-webkit-overflow-scrolling:touch}
+.it{flex:0 0 auto;width:64px;padding:4px 2px;text-align:center;font-size:10px;line-height:1.2}
+.it .i{font-size:17px;display:block}
+.it .c{color:#e0b04a}
+#toast{position:fixed;left:50%;top:34%;transform:translateX(-50%);max-width:80vw;text-align:center;background:rgba(0,0,0,.78);border:1px solid #444;padding:7px 12px;border-radius:5px;font-size:13px;display:none;pointer-events:none}
+.ov{position:fixed;left:0;top:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:rgba(5,9,12,.78);padding:12px}
+.ov .p{width:min(340px,94vw);padding:16px}
+.ov h1{margin:0;font-size:30px;letter-spacing:2px}
+.ov h1 span{color:#e8503a}
+.ov input[type=text]{width:100%;padding:9px;margin:4px 0 10px;background:#0b1214;border:1px solid #3a4c4a;color:#fff;border-radius:4px;font-size:14px;-webkit-user-select:text;user-select:text}
+.ov .h{color:#9aa8a5;font-size:11px;margin-top:10px;line-height:1.5}
+#train .p{width:min(360px,94vw)}
+body.menu #left,body.menu #rank,body.menu #bottom{display:none}
+#paused{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);font-size:22px;display:none;pointer-events:none;color:#ffcf7a}
+#btns2{display:flex;gap:4px;margin-top:4px}
+#btns2 button{flex:1;padding:6px 2px;font-size:11px}
+.ov .p{max-height:94vh;overflow-y:auto}
+#tree .p,#dip .p,#ach .p{width:min(430px,96vw)}
+.brn{margin:9px 0 2px;color:#ffcf7a;font-weight:bold;font-size:13px}
+.sks{display:flex;gap:4px;margin:3px 0}
+.sk{flex:1;text-align:left;padding:5px 6px;font-size:10.5px;line-height:1.25;color:#c9c5b8}
+.sk b{font-size:11.5px;color:#e8e4d8}
+.sk .c{color:#e0b04a;float:right;margin-left:4px}
+.sk.own{border-color:#6ccf6c;background:#17301b}
+.sk.av{border-color:#e0b04a;background:#2a2a18}
+.sk.poor{opacity:.75}
+.sk.lk{opacity:.38}
+.dr{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid #1d2a2a;font-size:11.5px}
+.dr .n{flex:1}
+.dr button{padding:5px 7px;font-size:10.5px}
+#prop{position:fixed;left:50%;top:58%;transform:translateX(-50%);width:min(330px,92vw);padding:9px;display:none;z-index:5;text-align:center;font-size:12px}
+html.big body{font-size:15px}
+html.big button{padding:10px 12px;font-size:14px}
+html.big #btns button,html.big #btns2 button{padding:10px 2px;font-size:13px}
+html.big .it{width:80px;font-size:12px}
+html.big #info .d,html.big #info .s{font-size:13px}
+html.big .sk{font-size:12.5px}
+html.big #hud .r{font-size:13px}
+.chk{display:block;margin:2px 0 6px;color:#c9c5b8;font-size:12px}
+.chk input{margin-right:6px;vertical-align:middle}
+#menu{background:radial-gradient(ellipse at 30% 20%,rgba(30,45,30,.55),rgba(3,6,8,.9))}
+#menu .mw{display:flex;width:min(940px,98vw);max-height:96vh;overflow:hidden;border:1px solid #4a5a3a;border-radius:6px;background:linear-gradient(135deg,rgba(14,22,16,.96),rgba(8,12,14,.96));box-shadow:0 0 40px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,200,80,.06)}
+.mleft{position:relative;flex:0 0 36%;padding:16px 16px 14px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;border-right:1px solid #3a4a2e;background:linear-gradient(160deg,#1c2a1a,#0c1410 70%)}
+.mleft>*{position:relative;z-index:1}
+.radar{position:absolute!important;z-index:0!important;left:-30%;top:-10%;width:160%;aspect-ratio:1;border-radius:50%;background:conic-gradient(from 0deg,rgba(120,255,120,.16),rgba(120,255,120,0) 22%,rgba(120,255,120,0) 100%);animation:sweep 6s linear infinite;pointer-events:none}
+.radar:after{content:"";position:absolute;inset:18%;border-radius:50%;border:1px solid rgba(120,255,120,.12);box-shadow:0 0 0 36px rgba(120,255,120,0),inset 0 0 0 36px rgba(0,0,0,0)}
+@keyframes sweep{to{transform:rotate(360deg)}}
+.hz{position:absolute!important;z-index:0!important;left:0;right:0;top:0;height:9px;background:repeating-linear-gradient(-45deg,#e0b04a 0 10px,#111 10px 20px);opacity:.85}
+.emb{font-size:38px;line-height:1;margin-bottom:4px;filter:drop-shadow(0 0 8px rgba(232,80,58,.6))}
+.mleft h1{margin:2px 0 6px;font-size:27px;line-height:1.05;letter-spacing:2px;text-shadow:0 2px 0 #000}
+.mleft h1 span{display:block;color:#e8503a;font-size:32px;letter-spacing:4px}
+.tag{color:#a8b5a0;font-size:12px;line-height:1.45;margin-bottom:10px}
+.rk{display:inline-block;align-self:flex-start;background:rgba(224,176,74,.12);border:1px solid #6a5a2a;color:#e0b04a;padding:3px 9px;border-radius:3px;font-size:11px;margin-bottom:12px}
+.play{width:100%;padding:13px;font-size:16px;letter-spacing:2px;box-shadow:0 0 14px rgba(232,80,58,.45);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 24px rgba(232,80,58,.85)}}
+.sub{width:100%;margin-top:7px}
+.mright{flex:1;padding:12px 14px;overflow-y:auto}
+.sec{margin-bottom:9px}
+.st{color:#e0b04a;font-size:10px;letter-spacing:2px;margin-bottom:5px;font-weight:bold;display:flex;align-items:center;gap:6px}
+.st i{font-style:normal;background:#e0b04a;color:#111;border-radius:2px;width:15px;height:15px;display:inline-flex;align-items:center;justify-content:center;font-size:10px}
+.sl{color:#7f8c8a;font-size:9px;letter-spacing:1px;text-transform:uppercase;margin:5px 0 3px}
+.seg{display:flex;flex-wrap:wrap;gap:5px}
+.seg button{flex:1 1 auto;padding:7px 9px;font-size:12px;background:#121b18;border:1px solid #33433a;color:#b9c4b4;border-radius:3px;white-space:nowrap}
+.seg button.on{background:linear-gradient(180deg,#3a2118,#2a1610);border-color:#e8503a;color:#fff;box-shadow:inset 0 0 0 1px rgba(232,80,58,.4),0 0 8px rgba(232,80,58,.3)}
+.sd{color:#8d9a88;font-size:11px;margin-top:5px;line-height:1.35;min-height:15px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#menu input[type=text]{margin:0;background:#0b1210;border:1px solid #3a4a2e}
+.ht{color:#66736a;font-size:10px;line-height:1.4;border-top:1px dashed #2a3a2a;padding-top:6px;margin-top:2px}
+html.eco .radar,html.eco .play{animation:none}
+@media (max-width:700px){
+ #menu .mw{flex-direction:column;overflow-y:auto;position:relative;padding-top:9px}
+ .mleft{display:contents}
+ .mleft>.emb,.mleft>.lbl,.mleft>h1,.mleft>.tag,.mleft>.rk{margin-left:14px;margin-right:14px;order:1}
+ .mleft>.emb{font-size:26px;margin-bottom:0}.mleft>.lbl{margin-top:4px}
+ .mleft h1{font-size:22px}.mleft h1 span{font-size:26px;display:inline;margin-left:6px}
+ .mleft>.rk{align-self:flex-start}
+ .mright{overflow:visible;padding:4px 14px;order:2;flex:0 0 auto}.g2{grid-template-columns:1fr}
+ .mleft>.chk{margin:0 14px 4px!important;order:3}
+ .mleft>.sub{order:4;width:auto;margin:6px 14px 0}
+ .mleft>.play{order:5;position:sticky;bottom:0;z-index:4;width:auto;margin:8px 10px 8px;flex:0 0 auto}
+ .radar{display:none}
+}
+@media (max-height:430px) and (min-width:701px){
+ .mleft{padding:10px 12px}.emb{display:none}.mleft h1{font-size:21px}.mleft h1 span{font-size:25px}.tag{font-size:11px;margin-bottom:6px}.rk{margin-bottom:7px}
+ .play{padding:9px;font-size:14px}.chk{margin:0 0 2px!important}.seg button{padding:5px 8px}.sec{margin-bottom:6px}.ht{display:none}
+}
+/* ---- estilo militar para paneles ---- */
+#train .p,#tree .p,#dip .p,#ach .p,#end .p{position:relative;border:1px solid #4a5a3a;border-radius:6px;background:linear-gradient(135deg,rgba(16,26,18,.97),rgba(8,12,14,.97));box-shadow:0 0 36px rgba(0,0,0,.75),inset 0 0 0 1px rgba(255,200,80,.06);padding-top:22px;overflow-x:hidden}
+#train .p:before,#tree .p:before,#dip .p:before,#ach .p:before,#end .p:before{content:"";position:absolute;left:0;right:0;top:0;height:9px;background:repeating-linear-gradient(-45deg,#e0b04a 0 10px,#111 10px 20px);opacity:.85}
+.ml{letter-spacing:3px;color:#7f8c8a;font-size:9px;margin:0 0 1px}
+.wh{margin:0 0 7px;font-size:17px;letter-spacing:2px;text-transform:uppercase;color:#e0b04a;text-shadow:0 2px 0 #000;padding-bottom:6px;border-bottom:1px dashed #3a4a2e}
+.wh em{font-style:normal;color:#e8503a}
+.cl{width:100%;margin-top:10px;padding:9px;letter-spacing:2px;background:#121b18;border:1px solid #4a5a3a;color:#c9d4c0}
+.brn{background:linear-gradient(90deg,rgba(224,176,74,.16),rgba(224,176,74,0));border-left:4px solid #e0b04a;padding:3px 8px;letter-spacing:2px;text-transform:uppercase;font-size:12px!important}
+.sk{border-left:3px solid #33433a;background:#101814}
+.sk.own{border-left-color:#6ccf6c}
+.sk.av{border-left-color:#e0b04a}
+.dr{background:rgba(255,255,255,.02);border:1px solid #1f2d24;border-left:3px solid #4a5a3a;border-radius:3px;padding:6px 8px;margin:4px 0}
+.dr i{border-radius:2px;flex:0 0 auto}
+.rkb{display:flex;align-items:center;gap:10px;background:rgba(224,176,74,.08);border:1px solid #6a5a2a;border-radius:4px;padding:7px 10px;margin-bottom:8px}
+.rkb .big2{font-size:28px}
+.pbar{height:6px;background:#0b1210;border:1px solid #2a3a2a;border-radius:3px;margin-top:4px;overflow:hidden}
+.pbar>div{height:100%;background:linear-gradient(90deg,#b8862a,#e0b04a)}
+#end .p{padding:26px 22px 18px}
+#end h1{letter-spacing:4px;text-shadow:0 3px 0 #000}
+#prop{border:1px solid #6a5a2a!important;background:linear-gradient(135deg,rgba(26,22,12,.97),rgba(10,12,14,.97))!important;box-shadow:0 0 22px rgba(0,0,0,.7)}
+#prop:before{content:"";display:block;height:6px;margin:-9px -9px 7px;background:repeating-linear-gradient(-45deg,#e0b04a 0 8px,#111 8px 16px);opacity:.85}
+.box{border-color:#3a4a2e!important}
+#info{border-left:3px solid #e0b04a!important}
+#toast{border:1px solid #6a5a2a!important;border-left:4px solid #e8503a!important}
+/* ---- paneles horizontales ---- */
+#tree .p{width:min(1020px,98vw)}
+#dip .p,#ach .p{width:min(920px,98vw)}
+#train .p{width:min(760px,98vw)}
+#end .p{width:min(720px,98vw)}
+#tree .p,#dip .p,#ach .p,#train .p{overflow:hidden}
+#treeTxt,#dipTxt,#achTxt,#trainTxt{max-height:calc(94vh - 70px);overflow:auto}
+#tree .cl,#dip .cl,#ach .cl,#train .cl{position:absolute;top:15px;right:10px;width:auto;margin:0;padding:4px 12px;z-index:3;font-size:11px}
+.wh{padding-right:96px}
+.tgrid{display:grid;grid-template-columns:72px repeat(5,minmax(150px,1fr));gap:5px;min-width:880px;margin-top:6px}
+.tlv{color:#7f8c8a;font-size:9px;letter-spacing:2px;text-align:center;text-transform:uppercase;padding:2px 0}
+.tbh{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,rgba(224,176,74,.18),rgba(224,176,74,.04));border-left:4px solid #e0b04a;font-size:9px;letter-spacing:0;text-transform:uppercase;color:#e0b04a;padding:4px 2px}
+.tbh span{font-size:22px;letter-spacing:0}
+.tcell{display:flex;flex-direction:column;gap:4px}
+.tcell .sk{flex:1;width:100%}
+.dgrid,.agrid{display:grid;gap:6px}
+.dgrid{grid-template-columns:repeat(auto-fill,minmax(285px,1fr))}
+.agrid{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.dgrid .dr,.agrid .dr{margin:0}
+.full{grid-column:1/-1}
+.tg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+.tg2>div{background:rgba(255,255,255,.025);border:1px solid #223028;border-left:3px solid #4a5a3a;border-radius:3px;padding:9px 11px}
+.lvb{font-size:30px;font-weight:bold;color:#e0b04a;letter-spacing:2px;line-height:1;margin-bottom:5px}
+#end .p{display:flex;flex-direction:row;align-items:center;gap:18px;text-align:left!important;padding:30px 22px 20px}
+#end .el{flex:0 0 150px;text-align:center}
+#end .eb{font-size:70px;line-height:1;filter:drop-shadow(0 0 14px rgba(232,80,58,.7))}
+#end .er{flex:1}
+#end h1{margin:0 0 6px}
+@media (max-width:640px){
+ .tg2{grid-template-columns:1fr}
+ #end .p{flex-direction:column;text-align:center!important}
+ #end .el{flex:0 0 auto}
+}
+</style>
+</head>
+<body class="menu">
+<canvas id="cv"></canvas>
+
+<div id="left">
+ <div id="hud" class="box">
+  <div class="lbl">Ejército</div>
+  <div class="r"><span class="lbl">Tropas</span><b id="hT">0</b></div>
+  <div id="tbar"><div id="tfill"></div></div>
+  <div class="r"><span class="lbl">Crecimiento</span><b id="hG" style="color:#9be58f">0</b></div>
+  <div class="r"><span class="lbl">Oro</span><b id="hO" class="gold">0</b></div>
+  <div class="r"><span class="lbl">Territorio</span><b id="hL">0%</b></div>
+  <div class="r"><span class="lbl">Investigación</span><b id="hR" style="color:#8fd0ff">0</b></div>
+ </div>
+ <button id="bRecruit" class="box" style="width:100%;margin-top:4px;padding:7px;color:#ffd84a;font-weight:bold">📣 Reclutar</button>
+ <div id="btns">
+  <button id="bPause" class="box">⏸</button>
+  <button id="bSpeed" class="box">x1</button>
+  <button id="bTrain" class="box">🎖️ Tropas</button>
+ </div>
+ <div id="btns2">
+  <button id="bTree" class="box">🌳 Árbol</button>
+  <button id="bDip" class="box">🤝 Pactos</button>
+  <button id="bSnd" class="box">🔊</button>
+ </div>
+</div>
+<div id="rank" class="box"></div>
+<div id="paused">PAUSA</div>
+<div id="toast"></div>
+
+<div id="bottom">
+ <div id="info" class="box"></div>
+ <div id="ctl" class="box">
+  <span class="lbl" style="white-space:nowrap">Ataque <b id="aPct" style="color:#ff8b7a">60%</b></span>
+  <input id="slider" type="range" min="5" max="100" value="60">
+  <div id="modes">
+   <button data-m="terr" class="on">⚔️</button>
+   <button data-m="naval">🚢</button>
+   <button data-m="air">✈️</button>
+  </div>
+ </div>
+ <div id="bar" class="box"></div>
+</div>
+
+<div id="menu" class="ov">
+ <div class="mw box">
+  <div class="mleft">
+   <div class="radar"></div>
+   <div class="hz"></div>
+   <div class="emb">☢️</div>
+   <div class="lbl" style="letter-spacing:3px">// centro de mando</div>
+   <h1>POLÍTICA<span>NUCLEAR</span></h1>
+   <div class="tag">Conquista el mundo en tiempo real.<br>El primero en controlar el <b>85%</b> del mapa gana.</div>
+   <div id="rankTxt" class="rk"></div>
+   <button id="bPlay" class="pri play">▶ INICIAR GUERRA</button>
+   <button id="bAch" class="sub">🏆 Logros y rango</button>
+   <label class="chk"><input type="checkbox" id="ecoChk">Modo ahorro (móviles lentos)</label>
+   <label class="chk"><input type="checkbox" id="bigChk">Botones y letras grandes</label>
+  </div>
+  <div class="mright">
+   <div class="sec"><div class="st"><i>1</i> MODO DE OPERACIÓN</div><div id="modeSeg" class="seg"></div><div id="modeD" class="sd"></div></div>
+   <div class="sec"><div class="st"><i>2</i> TEATRO DE OPERACIONES</div><div id="mapSeg" class="seg"></div></div>
+   <div class="g2">
+    <div class="sec"><div class="st"><i>3</i> COMANDANTE</div><input id="nm" type="text" value="Argentina" maxlength="14"><div id="docSeg" class="seg" style="margin-top:6px"></div><div id="docD" class="sd"></div></div>
+    <div class="sec"><div class="st"><i>4</i> CONDICIONES</div><div class="sl">Enemigos</div><div id="diffSeg" class="seg"></div><div class="sl">Relieve y desastres</div><div id="disSeg" class="seg"></div></div>
+   </div>
+   <div class="ht">Toca para elegir inicio y atacar · Construir: 1 toque elige, 2 toques construyen · Arrastra y pellizca para mover el mapa · 🌳 Habilidades · 🤝 Pactos · 🛢️⛏️🌾 Recursos · 📣 Reclutar</div>
+  </div>
+  <div style="display:none">
+   <select id="diffSel"><option value="0.5">Fácil</option><option value="0.8" selected>Normal</option><option value="1.1">Difícil</option></select>
+   <select id="modeSel"><option value="normal">Partida libre</option><option value="daily">Desafío diario</option><option value="cold">Guerra Fría</option><option value="fire">Mundo en llamas</option></select>
+   <select id="docSel"></select>
+   <select id="disSel"><option value="0">Liso</option><option value="1" selected>Normal</option><option value="2">Extremo</option></select>
+   <select id="mapSel"></select>
+  </div>
+ </div>
+</div>
+
+<div id="train" class="ov" style="display:none">
+ <div class="p box">
+  <div class="lbl ml">// cuartel general</div><h4 class="wh">🎖️ Entrenamiento de infantería</h4>
+  <div id="trainTxt" style="line-height:1.5"></div>
+  <div class="row" style="display:flex;gap:6px;margin-top:10px">
+   <button id="bTrainBuy" class="pri" style="flex:1"></button>
+   <button id="bTrainClose" class="cl" style="width:auto;margin:0">Cerrar</button>
+  </div>
+ </div>
+</div>
+
+<div id="tree" class="ov" style="display:none"><div class="p box"><div id="treeTxt"></div><button id="bTreeClose" class="cl">✕ CERRAR</button></div></div>
+<div id="dip" class="ov" style="display:none"><div class="p box"><div id="dipTxt"></div><button id="bDipClose" class="cl">✕ CERRAR</button></div></div>
+<div id="ach" class="ov" style="display:none"><div class="p box"><div id="achTxt"></div><button id="bAchClose" class="cl">✕ CERRAR</button></div></div>
+<div id="prop" class="box"></div>
+
+<div id="end" class="ov" style="display:none">
+ <div class="p box">
+  <div class="el"><div class="lbl ml">// informe final</div><div class="eb" id="endE">☢️</div></div>
+  <div class="er"><h1 id="endT" style="font-size:28px"></h1>
+  <div id="endD" style="margin:8px 0 14px;color:#c9c5b8"></div>
+  <button id="bAgain" class="pri play" style="width:100%;padding:12px">↺ OTRA GUERRA</button></div>
+ </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+/* =============== MAPA =============== */
+var GW=210,GH=83,N=GW*GH,K=1,E=1;
+var LON0=-170,LAT0=80,DLON=350/GW,DLAT=138/GH;
+var MAPS={
+ world:{n:'🌍 Mundo (grande)',lon0:-170,lon1:180,lat0:80,lat1:-58,gw:320,bots:22},
+ sa:{n:'🌎 Sudamérica',lon0:-84,lon1:-33,lat0:14,lat1:-57,gw:210,bots:12},
+ na:{n:'🌎 Norteamérica',lon0:-170,lon1:-50,lat0:75,lat1:6,gw:300,bots:14},
+ eu:{n:'🌍 Europa',lon0:-25,lon1:45,lat0:72,lat1:34,gw:300,bots:16},
+ af:{n:'🌍 África',lon0:-20,lon1:55,lat0:38,lat1:-36,gw:240,bots:16},
+ as:{n:'🌏 Asia',lon0:25,lon1:180,lat0:78,lat1:-12,gw:330,bots:18},
+ oc:{n:'🌏 Oceanía',lon0:108,lon1:180,lat0:0,lat1:-48,gw:300,bots:10}
+};
+var MAPKEY='world',BASE_LAND=5452;
+var POLYS=[
+ // 0 Norteamérica y Centroamérica
+ [-168,65.6,-166,68.3,-163,69.5,-156.5,71.3,-152,70.8,-146,70.2,-141,69.7,-136,68.9,-131,69.8,-128,70.2,-124,69.4,-120,69.4,-115,68.1,-110,68,-106,68.5,-101,67.8,-97,68.5,-95,71.9,-92,69.5,-88,68.3,-85,66.8,-86,66,-90,64,-94.5,61,-93,58.8,-90,57,-85,55.3,-82.3,53,-80.5,51.5,-78.8,52.5,-79.1,54.5,-77,56,-77.5,58.5,-78,60.5,-77.5,62.4,-73.5,62.2,-69.7,61,-67.5,58.5,-65,60.3,-62,57.5,-60.5,55.5,-57,54,-55.7,52.2,-57,51.4,-60,50.2,-64.5,50.2,-67,49.2,-68.5,48.6,-70.5,47.3,-70.2,47.2,-68,48.3,-66,48.9,-64.5,48.8,-65,47.8,-64.7,47,-64,46.2,-61.5,45.8,-60,46.1,-61,45.2,-63.5,44.5,-66,43.5,-66.5,45,-67,44.7,-69,44,-70.5,43,-70.8,42.3,-70,41.8,-71.5,41.3,-74,40.5,-74,39.5,-75.5,38.3,-76,37,-75.7,35.2,-77,34.5,-79,33.2,-81,31.5,-81.3,30,-80.3,27.5,-80.1,25.8,-80.8,25.2,-81.8,26.2,-82.7,27.8,-82.8,29,-84.2,30,-85.5,29.7,-87.5,30.3,-89,30.2,-89.4,29,-91,29.2,-93.8,29.7,-95.5,28.7,-97.2,27.5,-97.4,25.8,-97.8,22.3,-97.2,20.5,-96.3,19,-94.8,18.3,-92,18.5,-91,19.3,-90.4,21,-87.3,21.5,-87.5,19.5,-88.2,17.5,-88.8,15.9,-87.5,15.8,-85,15.9,-83.3,15,-83.5,12.5,-83.7,10.9,-82.5,9.5,-81.3,8.8,-79.5,9.6,-78.2,9.2,-77.5,8.3,-77.9,7.2,-80,7.3,-81.7,8.2,-83.5,8.4,-85.7,9.9,-85.7,11,-87.4,12.9,-89.4,13.5,-91.4,14,-92.3,14.6,-94.2,16.1,-96.5,15.7,-98.5,16.3,-100.8,17.2,-102.2,18,-104.3,19.1,-105.5,20.4,-105.3,21.6,-106.5,23.2,-108.3,25.2,-109.5,26.5,-111,28.5,-112.3,29.8,-114.7,31.6,-114.8,30.3,-113.1,28.8,-112.2,27.1,-110.7,24.6,-109.5,23.1,-110.4,23,-112.1,24.5,-113.8,26.7,-114.9,27.9,-115.9,29.8,-116.7,31.3,-117.1,32.5,-118.4,33.8,-120.5,34.5,-121.9,36.6,-122.5,37.7,-123.8,39.5,-124.4,40.4,-124.1,42.5,-124,44.6,-123.9,46.2,-124.7,48.3,-123.2,49.3,-127,51,-128.5,52.5,-130.2,54.5,-130,55.9,-133,57.5,-135.3,59.5,-139.5,59.9,-144,60,-148,60.7,-150.5,59.3,-152.5,58.5,-154.5,57.5,-157.5,56.5,-161.5,55.2,-164.5,54.5,-160,56.5,-158.5,58.7,-162,59.9,-165,60.8,-166,62.5,-161,64.5,-165.5,64.5],
+ // 1 Groenlandia
+ [-73,78.5,-68,76,-58,75,-55,71,-53,68,-51,64,-47,60.3,-43.5,60,-41,62.5,-37.5,65.5,-33,68,-26,69.5,-22,70.5,-22.5,73,-19.5,76,-18.5,79,-15,81.5,-30,83.5,-45,82.8,-58,82,-66,80.5,-72,79.5],
+ // 2 Sudamérica
+ [-77.4,8.6,-75.5,10.5,-74.8,11,-73.4,11.3,-71.3,12.4,-70,12.2,-68.3,10.6,-66,10.6,-64.2,10.5,-62.5,10.7,-61.8,10.2,-60.6,8.6,-59.5,8.2,-57.5,6.2,-55.5,5.9,-53.7,5.7,-52,4.8,-51.2,4,-50.2,1.8,-50.5,0.1,-48.5,-0.9,-47,-0.9,-44.5,-2.5,-42.5,-2.9,-40,-2.9,-38.5,-3.7,-37,-4.9,-35.3,-5.3,-34.9,-7.2,-35.2,-9,-36.6,-10.6,-37.2,-11.5,-38.5,-13,-39,-15,-39.3,-17.7,-40.2,-20.3,-41,-22,-42,-23,-44,-23,-46.5,-24,-48.5,-26,-48.6,-28,-50,-30,-51.3,-32,-53.4,-33.7,-54.9,-34.9,-56,-34.8,-57.8,-34.4,-58.4,-34.4,-57.1,-35.2,-57.5,-36.3,-56.7,-37,-57.6,-38.2,-59,-38.7,-62,-39,-62.3,-40.6,-65,-41,-64.3,-42.5,-65.1,-43.5,-65.8,-45,-67.5,-46.6,-65.6,-47.8,-67.8,-49,-69,-50.5,-68.4,-52.4,-65.3,-54.7,-66.5,-55,-68.5,-55.5,-71,-54.8,-72.5,-53.8,-74,-52,-75.2,-50,-74.6,-47.8,-75.5,-46,-74.2,-43.5,-73.8,-41.5,-73.6,-39.5,-73.4,-37.2,-72.6,-35.5,-71.7,-32.5,-71.5,-30,-70.9,-27,-70.3,-23.5,-70.2,-20,-70.3,-18.5,-71.5,-17.2,-73.5,-16,-76,-14,-77,-12,-79.2,-8,-81.2,-6,-81,-4.5,-80.2,-3.5,-80.9,-2.2,-80.2,-1,-80,0.5,-79,1.5,-78.8,2.6,-77.8,3.8,-77.3,5,-77.4,6.5,-77.9,7.2],
+ // 3 África
+ [-5.8,35.8,-5,35.9,-2.9,35.2,-1,35.1,1,36.5,3,36.8,6,37,8.5,36.9,10.2,37.2,11,36.9,10.5,35.5,10.3,34.2,11.2,33.2,13,32.8,15.2,32.3,17,31,19,30.3,20,32.2,22.5,32.9,25,31.7,28,31.1,30,31.3,32.3,31.2,34.2,31.3,34.9,29.5,34.3,27.8,32.6,29.9,33.7,27.2,35.5,24,37.2,21,38.5,18,39.5,15.5,41.5,13.5,43.2,12.7,44.5,10.4,47,11.1,51.3,11.9,51,10.3,49,6.5,48,4.8,46,2,43.5,0,41.5,-2,40,-3,39.2,-5,39.4,-7.5,39.5,-10,40.5,-11,40.5,-14.5,40.4,-16.5,37,-18.5,35,-20,35.4,-22,35.4,-24.2,33,-25.5,32.9,-26,32.5,-28.5,31,-30,29.5,-31.7,27.5,-33.3,25.5,-34,22.5,-34,20,-34.8,18.5,-34.2,18.2,-32.5,17,-30,16.5,-28.5,15.2,-26.5,14.5,-23,14.2,-20,11.8,-17.2,12.5,-14,13.5,-11,13.2,-9,12.3,-6,11.8,-4.5,9.5,-2,9.2,0.5,9.5,3.5,8.8,4.5,7,4.3,5.5,4.6,3.5,6.3,1.5,6.1,-1.5,5,-3.5,5.2,-5.8,5,-7.8,4.4,-10.3,6.3,-12.8,8.2,-13.7,9.7,-15,11,-16.7,12.4,-17.5,14.7,-16.5,18,-16.1,20.5,-17,21,-16,23,-14.5,26,-12.9,27.9,-10,29.5,-9.8,31,-8.5,33.2,-6.5,34.2],
+ // 4 Eurasia
+ [-5.4,36,-6.3,36.7,-7.4,37.2,-8.9,37,-8.8,38.5,-9.5,38.8,-8.8,41,-8.8,42.2,-9.3,43,-8,43.7,-5.5,43.6,-3,43.4,-1.8,43.4,-1.2,44.7,-1.2,46,-2.5,47.2,-4.5,47.9,-4.7,48.4,-3,48.8,-1.6,48.7,-1.3,49.7,0.2,49.4,1.5,50.1,1.8,51,3.2,51.4,4.5,52.3,5,53.3,7,53.5,8.5,53.8,8.7,55.2,8.1,56.6,10.5,57.7,10.3,56.5,10.9,55.5,9.8,54.8,10.8,54.1,12.5,54.4,14.2,53.9,16.5,54.6,18.8,54.4,19.7,54.4,21,55.2,21,56.8,23,57,24,57.2,24.4,58.4,23.5,59.2,25.5,59.5,28,59.5,30,59.9,28.5,60.5,26.5,60.4,23,59.9,21.3,60.7,21.5,61.7,21.3,63,24.5,64.8,25.4,65.4,24.2,65.8,22.3,65.8,21.5,64.7,19,63.3,17.5,62.2,17.2,61,17.3,60.5,18.5,60.3,19,59.5,17.5,58.8,16.5,57.8,16.4,56.6,14.5,56.1,12.9,55.4,12.4,56.2,11.8,57.7,11.2,59.1,10.6,59.3,9.5,59,8,58.1,6.6,58.1,5.6,58.9,5,60.3,5,61.5,6,62.5,8,63.5,10.4,64.5,12.5,66,14.5,67.7,16.5,68.8,19,69.7,22,70.3,25,71,28,71,31,70.2,33,69.4,36,69,40,67.8,41.2,66.6,38.5,66,34.8,66.7,33,66.2,34,64.8,36.5,64.2,38.5,64.3,40.5,64.8,40.5,66,43,66.4,44.5,68,46,67.8,53,68.5,56,67,60,68.8,60.5,69.8,66,69.2,68.5,72.8,72,73.5,73.5,71,72.5,68.5,74,67.5,76.5,69,78,72,80.5,73.5,86,74.5,87,75.2,93,76,100,76.5,104,77.7,107,77,113,75.9,113.5,73.7,120,73,126,73.5,129,71.2,132.5,71.8,140,72.5,146,72.3,150.5,71.5,152.5,70.8,160,69.6,167,69.5,170,70,176.5,69.5,180,68.8,180,65,178.5,64.5,175,62.5,171,60.4,166,60,163,58.5,163,57.5,162,56,160,54,158.5,52.5,156.7,51,155.7,54.5,155.8,57,157.5,58.5,160.5,60.3,156,61.3,152,59.2,148,59.3,143,59.2,140.8,58.2,138,56.8,137.5,54,140.5,53.3,141.3,52.3,140.5,50,140.5,48.5,138,46.5,135.5,43.9,133,42.7,131.9,43,130.5,42.3,129.8,40.8,128.5,40,127.5,39.3,128.4,38.3,129.4,36.8,129.5,35.2,128.5,34.8,126.5,34.5,126.3,36.2,126.6,37.7,125.2,37.7,125.2,39.5,124.4,39.8,121.3,38.9,122,40.5,121,40.8,119.6,39.8,118,39.2,117.7,38.5,119,37.2,120.7,37.7,122.5,37.3,121,36.5,119.2,35,120.5,32.7,121.9,31.4,121.8,30.2,120.8,28,119.5,25.5,117.5,23.6,115,22.7,113.5,22.2,111,21.5,110.3,20.4,109.7,21.5,108.5,21.7,106.8,20.7,105.8,19,106.5,17.5,108.3,15.5,109.3,13,109,11.5,107,10.4,105.1,8.7,104.8,10,103.1,11,102,12.3,100.9,13.4,100,13.3,99.5,11,99.2,9.2,100.3,7.5,101.5,6.9,102.5,5.9,103.4,4,103.4,2.5,104.2,1.4,103.5,1.3,102,2.4,101,3.3,100.3,5.4,100.1,6.4,98.3,8,98.6,10,98.5,12.5,97.7,16.5,95.3,15.8,94.4,16.2,94.5,18,93.8,19.5,92.3,20.7,91.9,22.3,90.5,22.3,89,21.8,87,21.3,86.9,20,85.2,19.5,83,17.2,81.3,16,80.2,15.2,80.1,13,79.9,11.2,79.3,10.2,78.2,8.9,77.5,8.1,76.4,9.5,75.5,12,74.8,13,73.8,16,72.9,19,72.6,21,72.2,21.6,70.5,20.8,69,22.3,68.6,23.4,67.3,24.2,66.5,25.4,62.5,25.2,60,25.3,57.5,25.8,56.8,27,54.5,26.6,52.5,27.5,50.8,29.2,49.6,30,48.4,30,48,29.5,48.8,28,50,26.7,50.5,25.2,51.5,25.3,51.5,24.5,52.5,24.2,54.5,24.3,56.3,26.3,56.5,24.5,58.6,23.5,59.8,22.3,58.8,20.4,57.8,19,56.5,17.9,55,17,52.2,16.2,49,14.5,45,12.9,43.4,12.7,42.8,14.5,42.7,16.5,41,19,39,21.5,37.5,24.5,35,28,34.9,29.5,34.5,31.5,34.9,32,35.1,33,35.9,34.5,35.8,35.8,36.2,36.6,34.6,36.8,32.5,36.1,30.5,36.6,29,36.6,28,36.8,27.3,37.2,26.4,38.5,26.8,39.4,26.2,40,26.3,40.2,27.5,40.4,29,40.9,29.1,41.2,31,41.1,33,42,35,42,36.5,41.4,38.5,40.9,41,41.2,41.7,41.6,41.6,42.6,39.8,43.5,37.5,44.7,37.5,45.3,36.5,45.4,35.5,45,33.5,44.4,32.5,45.4,33.6,46,32,46.4,30.8,46.5,29.7,45.3,28.7,44.4,28,43.5,27.8,42.5,28,41.7,26.5,41.7,25.5,40.8,23.8,40.7,24.2,40,22.8,40.4,22.6,39.5,23.5,38.2,24,37.7,22.8,36.5,21.7,36.9,21.1,38.3,20.2,39.5,19.4,40.4,19.5,41.8,18.5,42.5,17,43.2,15.7,44.1,14.5,45.2,13.7,45.4,12.4,45.4,12.3,44.5,13.6,43.5,14.5,42.2,16.2,41.7,17.8,40.8,18.5,40.2,17.1,40.4,16.5,39.6,17.1,38.9,16.1,38,15.7,37.9,15.9,38.7,15.6,40,14.3,40.8,13,41.3,11.1,42.4,10.5,43.5,9.5,44.3,8,43.9,6.5,43.2,4.8,43.4,3.2,43,3.1,42,1,41.1,0.4,40,-0.3,39,0,38.7,-0.7,37.6,-2,36.8,-4.4,36.7],
+ // 5 Gran Bretaña
+ [-5.7,50.1,-3.5,50.3,-1.2,50.7,0.9,50.9,1.4,51.3,0.5,51.5,0.9,52.7,1.7,52.7,0.3,53.1,-0.1,53.7,-0.2,54.2,-1.6,55.6,-2.2,56.1,-2.8,56.4,-1.8,57.5,-3.5,57.7,-4.2,57.5,-3.1,58.6,-5,58.6,-6.2,57.5,-5.6,56.4,-5,55.5,-4.7,54.8,-3.2,54.9,-3.5,54.3,-2.9,53.4,-3.1,53.3,-4.6,53.3,-4.2,52.8,-4.1,52.3,-5.2,51.9,-4.1,51.6,-3,51.4,-3.5,51.2,-4.7,51],
+ // 6 Irlanda
+ [-6,52.2,-6.2,53.4,-5.5,54.5,-6.2,55.2,-8,55.2,-8.8,54.5,-10,54,-9.7,53,-10.4,52.1,-9.8,51.5,-8.2,51.7,-6.4,52.1],
+ // 7 Islandia
+ [-22.5,63.8,-21,63.4,-18,63.4,-15,64.3,-13.6,65,-14.4,66.3,-16.5,66.5,-18.5,66.2,-21,65.5,-23.8,66.1,-24.5,65.5,-22.5,65,-22.8,64.3],
+ // 8-11 Japón
+ [130.9,34,132.5,35.5,135.5,35.7,136.8,37.3,139,38,140,40,141.5,41.4,142,39.5,141,37,140.9,35.7,139.8,35,138.8,34.6,136.9,34.6,135.2,33.5,135,34.6,133,34.3,131,34],
+ [129.8,33.3,131.7,33.8,131.9,32,131,31.2,130.2,31.2,129.8,32.7],
+ [132.5,33.8,134.6,34.2,134.2,33.3,133,32.7],
+ [140,41.5,141.5,42.8,143.3,42,145.4,43.3,144.4,44,142,45.5,141.6,45.1,140.4,43.3],
+ // 12 Sajalín, 13 Filipinas Luzón, 14 Mindanao, 15 Visayas
+ [142,46,143.4,49,143,53,142.2,54.3,142.5,51.5,141.8,48.5],
+ [120.4,18.5,122.2,18.5,122.5,16.5,121.5,14.2,123.5,13.7,124,12.7,122.5,13.8,120.6,14,120,15.5],
+ [122,7.2,123.5,8.7,125.5,9.7,126.5,7.5,125.5,5.7,124,6.5,122.5,6.8],
+ [122,10.5,124.5,12.5,125.7,11.5,125,9.8,123.5,9.5,122.5,9.5],
+ // 16 Sumatra, 17 Java, 18 Borneo, 19 Célebes, 20 Nueva Guinea
+ [95.3,5.6,97.5,5.2,100.4,2.7,103.5,0.5,104.7,-1.5,106,-3,105.8,-5.8,104.5,-5.9,102.2,-4,100.5,-1.5,98.5,1.5,97,3.3],
+ [105.2,-6.8,106.8,-6,108.5,-6.5,111,-6.4,112.7,-6.9,114.5,-7.8,114.4,-8.7,111,-8.3,108,-7.8,106,-7.3],
+ [109,1.5,110,2,111.5,2.7,113,3.2,114.5,4.8,116,6.9,117.3,7,119,5.3,117.8,4,118.6,2.5,117.5,0.8,117.5,-0.8,116.4,-2.5,116,-4,114.5,-3.7,113,-3.1,111.5,-3.4,110.3,-2.9,109.2,-1,109,0.5],
+ [119.3,-0.5,122.5,1,125,1.6,124.2,0.3,121,-0.7,123.3,-2,122.3,-4.5,121,-3.2,120.6,-2.7,120.5,-5.4,119.5,-5.5,118.8,-2.7],
+ [131,-0.8,132.5,-0.4,134,-0.9,135.5,-3.3,138,-1.8,141,-2.6,144.5,-3.8,146,-5.5,147.5,-6.2,147.6,-8,150.5,-10.4,149,-10.3,146.5,-8.9,143.5,-8.3,142,-9.2,139.5,-8.2,138,-8.3,137.8,-5.2,135,-4.4,132.5,-3.9,133,-2.4],
+ // 21 Australia, 22 Tasmania, 23-24 Nueva Zelanda
+ [115.1,-34.3,114.8,-33,115.7,-31.7,115,-30,114.6,-28.5,113.4,-26.2,113.6,-24.5,113.9,-22,114.6,-21.7,116.7,-20.7,118.8,-20.3,121.3,-19.5,122.3,-17.2,123.6,-16.5,125.3,-14.6,126.9,-13.8,128.2,-14.9,129.7,-14.9,130.2,-13,131.2,-12.2,132.6,-11.5,135.3,-12.2,136.9,-12.2,136,-13.8,135.4,-14.9,137.2,-15.9,139.4,-17.3,140.8,-17.4,141.5,-15.1,141.6,-13.1,142.5,-10.7,143.5,-13.7,144.5,-14.3,145.3,-15,146.3,-18.7,148.7,-20.3,150.8,-22.5,153.2,-25,153.6,-28.2,152.5,-32.3,151.3,-33.8,150.1,-36.5,149.9,-37.5,147.5,-38.1,146.2,-38.8,144.8,-38.3,143.5,-38.8,141.6,-38.3,140,-37.3,138.5,-35.7,138,-34.2,137.7,-33,136.8,-34,135.9,-34.8,134.2,-32.8,131.2,-31.5,128.9,-31.7,126.2,-32.3,124.1,-33.5,122.2,-33.9,120,-33.9,118,-35,116.4,-35],
+ [144.7,-40.7,146.5,-41,148.3,-40.9,148.3,-42.2,147.7,-43.2,146.9,-43.6,145.9,-43.4,145.2,-42.2],
+ [172.7,-34.4,174.4,-35.7,175.4,-36.5,176.5,-37.6,178.5,-37.7,177.9,-39.2,176.9,-40,175.3,-41.6,174.8,-41.3,175.1,-40,173.8,-39.2,174.6,-37.8,174.2,-36.5,173.3,-35.4],
+ [172.7,-40.5,174.3,-41.7,173.7,-43,171.2,-44.5,170.7,-45.8,169.3,-46.6,167.5,-46.3,166.5,-45.6,168.2,-44,170.5,-43.3,172.1,-41],
+ // 25 Madagascar
+ [49.3,-12.2,50.4,-15.4,49.5,-17.4,48.3,-20.8,47.2,-24.9,45.2,-25.5,43.7,-23.6,43.3,-21.2,44.4,-19.5,44,-17,46.3,-15.8,47.8,-14.5,48.9,-13.5],
+ // 26 Cuba, 27 La Española, 28 Jamaica, 29 Puerto Rico
+ [-84.9,21.9,-83,23,-81,23.1,-79.5,22.7,-77.5,21.7,-75.5,21,-74.2,20.3,-74.5,20,-77.2,19.9,-77.8,19.9,-78.5,21,-80.7,21.8,-82,22.2,-84.5,21.8],
+ [-74.4,18.4,-72.8,19.9,-70,19.8,-68.4,18.6,-69,18.4,-71,17.8,-73,18.1],
+ [-78.3,18.3,-76.3,18.2,-76.8,17.8],
+ [-67.2,18.4,-65.6,18.3,-66.5,17.9],
+ // 30 Baffin, 31 Victoria, 32 Ellesmere, 33 Terranova, 34 Vancouver
+ [-80,73.7,-76,72.5,-70,71.5,-68,70,-66.3,68.8,-62,67,-62.5,66,-65,63.3,-65.8,62.2,-68,62.2,-72,63.5,-75,64.5,-78,64.5,-74,66,-73.5,68.5,-78,69.8,-80,72],
+ [-118,72,-113,73,-107,73,-102,72,-104,69.6,-110,69,-117,70],
+ [-90,76.5,-78,76.7,-69,78.8,-62,82.5,-80,83,-92,81.5],
+ [-59.3,47.6,-56,47.5,-52.7,47.6,-53,49,-55.5,51.5,-56.5,51.2,-59,48.5],
+ [-128.3,50.8,-125.5,50.2,-123.5,48.5,-124.8,48.4,-126.5,49.6],
+ // 35 Hawái (Gran Isla), 36 Malvinas
+ [-156,20.2,-155,19.9,-154.8,19.5,-155.7,18.9,-156,19.7],
+ [-61.2,-51.3,-58,-51.2,-58.5,-52.2,-60.5,-52.2],
+ // 37 Sicilia, 38 Cerdeña, 39 Córcega, 40 Creta, 41 Chipre, 42 Mallorca
+ [12.4,37.8,15.1,38.3,15.6,38.2,15.1,36.7,12.4,37.6],
+ [8.2,41,9.7,41.2,9.7,39.2,8.5,38.9],
+ [8.6,42.4,9.4,43,9.5,41.6,8.8,41.6],
+ [23.5,35.3,26.3,35.3,26.1,35,24,35],
+ [32.3,35.1,34.5,35.7,34,34.9,32.9,34.6],
+ [2.4,39.7,3.4,39.9,3.2,39.3],
+ // 43 Sri Lanka, 44 Hainan, 45 Taiwán
+ [79.8,9.7,81.2,8.5,81.8,7.2,80.6,5.9,79.7,6.5,79.9,8.2],
+ [108.7,19.5,110.6,20.1,111,19.5,109.5,18.2],
+ [120.1,23.1,121.6,25.2,122,24.6,120.8,22],
+ // 46 Nueva Zembla, 47 Svalbard, 48 Zelanda, 49 Fionia, 50 Gotland
+ [51.5,71.5,55,73.3,60,75.5,68,77,67,76,60,74.3,56.5,72,53,70.8],
+ [11,78.5,17,80,22,80.4,27,80,22,78,16,76.7],
+ [11.1,55.3,12.6,55.5,12.6,56.1,11.2,56],
+ [9.8,55.1,10.7,55.2,10.5,55.6,9.8,55.5],
+ [18.1,57,18.9,57.6,18.6,57.9,18.1,57.4]
+];
+var LAKES=[
+ [-92,46.8,-89,48,-85,48.7,-84.5,47,-86,46.5,-88,47,-90,46.7],
+ [-87.8,42,-87.5,45.8,-85,45.8,-86.2,43,-87,41.7],
+ [-84.5,46,-82,46.2,-80,44.8,-82,43.2,-83.5,43.8],
+ [-83.4,41.7,-79,42.8,-81.5,42.3],
+ [-79.7,43.4,-76,43.7,-76.5,44.1,-79,43.3],
+ [-117,61.5,-111,62.8,-109,62.5,-114,61.2],
+ [-125,66.5,-120,67,-119,65.5,-123,65],
+ [-99,50.5,-97,53.5,-98,53.8,-99.5,52],
+ [47,45,50,46.5,53,45.5,53,42,53.7,39.5,54,37,51,36.7,49,38.5,49.5,40.5,47.5,42.5],
+ [58,46.5,61.5,46.5,61.5,44,59.5,43.8],
+ [73.5,46.5,79,46.7,79,45.8,74,45.5],
+ [103.7,51.5,106,53,110,55.5,109.5,53,106.5,51.5],
+ [30,60.8,32.5,61.2,32.7,60.5,31,60],
+ [31.7,-0.5,33.5,0.3,34,-1,33,-2.8,31.8,-2.5],
+ [29.2,-4,29.5,-8,31,-8.3,30.4,-5],
+ [34.3,-9.5,35.2,-14,34.5,-14.2,34.1,-11],
+ [13.5,13.3,14.7,13.2,14.4,12.4,13.6,12.7],
+ [-70,-15.3,-69.2,-15.8,-69.4,-16.6,-70,-16],
+ [-72,10.5,-71,10.7,-71.5,9.3],
+ [-86,11.8,-85,11.4,-85.5,11]
+];
+// Cordilleras reales: [semi-ancho (grados), núcleo alto (grados), lon,lat,lon,lat,...]
+var RANGES=[
+ [2.2,1,-72.5,9,-75,6,-77,2,-78.5,-1,-79,-5,-77.5,-9,-75,-13,-71,-16,-69,-19,-68.5,-23,-69.5,-28,-70,-33,-71,-38,-72,-44,-73,-50,-72,-54],
+ [2.4,1.1,-128,58,-122,53,-116,50,-112,45,-109,40,-106,36,-106,32],
+ [1.6,.7,-150,63,-141,61,-135,58,-130,55],
+ [1.2,.5,-155,68,-145,68.5],
+ [1.4,.6,-108,31,-106,26,-104,22,-102,19],
+ [1.1,.5,-100,28,-99,24,-98,20],
+ [1.1,.5,-122,48,-122,44,-120,38,-118,35],
+ [1.1,.3,-84,35,-80,38,-77,40,-74,42,-71,44],
+ [1.2,.5,-92,16,-87,14,-84,10,-80,8.5],
+ [.9,.4,-1.5,43,1,42.7,3,42.5],
+ [.7,.3,-8,43,-4.5,43],
+ [1.4,.6,6,44.5,7,46,10,46.5,13,46.7,16,47],
+ [.8,.2,8.5,44.5,11,44,13,42.5,15.5,40.5,16,38.5],
+ [1.1,.4,17.5,49.2,20,49.3,23,48.5,25,47.5,25,46,23,45.3],
+ [1,.3,14,46,17,44,19,42,21,40.5],
+ [.8,.3,23,43,27,42.8],
+ [1.3,.6,37.5,44.5,42,43,46,42,48.5,41.5],
+ [.9,.3,60,69,60,64,59,58,58,54,58,51],
+ [1.2,.4,6,60,8,62,13,66,17,68,21,69.5],
+ [1.2,.5,30,37,34,37.5,38,38],
+ [1,.3,31,41,37,40.7,41,41],
+ [1.4,.5,47,35,49,32,52,29.5,55,27.5],
+ [1,.4,49,37,54,36.5,57,37],
+ [1.6,.7,62,35,67,35.5,71,36],
+ [1.8,.9,73,36,76,35.5,80,32,84,28.5,88,27.8,92,28,95.5,28.5,98,27.5],
+ [3,1,82,33,90,33,98,33.5],
+ [1.6,.6,70,41,75,42,80,42.5,85,43],
+ [1.2,.5,72,38.5,74,38],
+ [1.3,.5,85,50,90,49.5,98,49.5],
+ [1.2,.4,92,52,100,51],
+ [1.5,.6,80,36,90,36,98,35.5],
+ [1,.3,104,34,110,34],
+ [1.2,.4,100,30,100,25],
+ [1,.3,95,26,97,20],
+ [.9,.3,104,20,106,15,107,11],
+ [.8,.3,73.5,20,75.5,12,77,9],
+ [1.2,.4,125,57,130,60,135,64,140,66],
+ [.9,.3,135,48,138,44],
+ [1,.4,158,52,160,57],
+ [.8,.4,137,36,138,35.5],
+ [.9,.4,98,4,101,-1,104,-4],
+ [1.2,.5,135,-4,141,-5,147,-6],
+ [1,.4,114,2,116,1],
+ [.7,.3,121,17,121,15],
+ [1.1,.5,-9,31,-5,33,0,35,5,36,9,35.5],
+ [1.5,.6,36,14,39,10,40,7],
+ [1.2,.5,35,3,37,-3,34,-8,35,-13],
+ [.9,.4,29,-25.5,29,-29,27,-31],
+ [1.3,.5,17,21,19,19],
+ [1.3,.5,5.5,23.5,8,21],
+ [.9,.4,9,4,10.5,6.5],
+ [.9,.4,14,-12,16,-13.5],
+ [1.1,.4,145,-14,146,-19,150,-24,152,-28,151,-33,148,-37,146,-37.5],
+ [.9,.4,172,-41.5,170,-43.5,168,-45],
+ [.8,.3,118,-23,121,-23.5],
+ [.7,.3,131,-23.7,135,-23.5]
+];
+var DESERTS=[
+ [-17,21,-10,27,-5,30,10,31,25,30.5,34,28,33,20,24,16,10,15,0,16,-12,16.5],
+ [35,29,40,32,47,30,52,24,56,22,55,17,48,15,43,17,38,23],
+ [80,40,92,41,105,43,112,42,110,38,100,38,90,37.5,80,37.5],
+ [14,-18,22,-19,26,-25,22,-29,17,-28,13,-23],
+ [118,-22,130,-22,138,-25,140,-30,132,-31,122,-30,117,-27],
+ [-71,-18,-69.5,-22,-69.5,-27,-71,-26],
+ [-117,36,-110,36,-106,31,-111,28.5,-116,32],
+ [68,27,73,29,74,26,70,24],
+ [53,34,60,34,62,30,56,28.5,53,30],
+ [55,41,62,41,62,37.5,56,37.5],
+ [-70,-38,-66,-37,-66,-45,-70,-46],
+ [38,10,48,10,50,4,43,2,38,4]
+];
+var JUNGLES=[
+ [-74,2,-65,5,-55,4,-50,0,-50,-5,-56,-10,-64,-10,-72,-8,-76,-3],
+ [10,3,20,4,28,2,28,-4,22,-7,14,-5,10,-1],
+ [97,18,105,20,108,15,106,10,103,2,98,8],
+ [-92,17,-84,14,-78,8,-83,9],
+ [-8,5,8,6.5,10,3,-5,7.5],
+ [74,22,77,11,73,15],
+ [-50,-20,-41,-22,-48,-27,-54,-27,-55,-20],
+ [88,26,95,28,97,24,91,23]
+];
+var RIVERS=[
+ [-73.5,-4.3,-70,-3.5,-65,-3,-60,-3.2,-55,-2,-51,-1.5,-50,-0.5],
+ [-52,-25,-55,-27,-58,-32.5,-58.3,-34.5],
+ [-67,5,-66,7.5,-63,8.2,-61,8.8],
+ [-95,47.2,-93.5,44.9,-91,41,-90,38.5,-90.5,35,-91.2,31,-89.2,29.3],
+ [-111,47.5,-104,47.8,-98,44,-96,41,-94.5,39.2,-90.2,38.8],
+ [32,0.4,32,3.5,31.5,5,32.5,9.5,32.5,15.6,33.5,19,31.4,22,32.7,25.7,31.2,30.3],
+ [27,-11,26,-5,25,0.5,21,1.8,18,0.5,16,-3,15,-4.3,12.5,-6],
+ [-10.5,10.5,-6,13.5,0,16,3.5,14,6.5,9.5,6,4.3],
+ [23,-12,25,-17,28.5,-16.2,32,-16.2,36,-18.5],
+ [8.5,48,13,48.5,17,48,19,47,21,44.8,25,43.8,28,44.5,29.5,45.3],
+ [9,47.5,7.6,49,7,51,6,52],
+ [35,57,40,57.5,44,56.3,47,53,46,49,47,46],
+ [32,55,31,52,31,48.5,33,47],
+ [84,53,80,58,73,61,70,66],
+ [95,52,92,58,86,66,83,71],
+ [107,54,115,59,126,64,128,70,127,72],
+ [121,52.5,127,50,133,48,140,53],
+ [91,33,98,30,104,28.8,110,30.5,115,30,121,31.7],
+ [96,35,103,36,110,39,112,35,118,37.5],
+ [99,29,100,21,105,15,106,10.5],
+ [79,30.5,83,26,88,24.5,90,23],
+ [74,36,72,33,70,28,68,25.2],
+ [38,36,41,34.5,44,32,47.5,30.8],
+ [141,-34.5,145,-35.7,148,-36],
+ [-79,43.5,-75,45,-70,47.5,-64,49.5],
+ [-137,60.5,-142,63.5,-150,65,-160,62.5,-164,62],
+ [-117,61,-124,65,-134,68.5]
+];
+// [nombre, lon, lat, radio en celdas base]
+var VOLC=[
+ ['Etna',15,37.7,4],['Vesubio',14.4,40.8,4],['Hekla',-19.7,63.9,5],['Fuji',138.7,35.4,4],['Sakurajima',130.7,31.6,3.5],['Aso',131.1,32.9,4],
+ ['Pinatubo',120.35,15.1,5],['Taal',121,14,3],['Mayon',123.7,13.3,3],['Merapi',110.4,-7.5,4],['Bromo',112.9,-7.9,3.5],['Kerinci',101.3,-1.7,3.5],['Sinabung',98.4,3.2,3],
+ ['Klyuchevskaya',160.6,56.1,5],['Popocatépetl',-98.6,19,5],['Colima',-103.6,19.5,4],['Fuego',-90.9,14.5,4],['Arenal',-84.7,10.5,3.5],
+ ['Nevado del Ruiz',-75.3,4.9,4],['Cotopaxi',-78.4,-0.7,4],['Misti',-71.4,-16.3,4],['Villarrica',-71.9,-39.4,4],
+ ['Monte Santa Elena',-122.2,46.2,4.5],['Rainier',-121.8,46.85,4],['Katmai',-153,58.3,5],
+ ['Nyiragongo',29.25,-1.52,4],['Ol Doinyo Lengai',35.9,-2.76,3.5],['Monte Camerún',9.17,4.2,4],['Erta Ale',40.67,13.6,3.5],
+ ['Ararat',44.3,39.7,3.5],['Elbrús',42.4,43.35,3.5],['Damavand',52.1,35.95,3.5],['Ruapehu',175.6,-39.3,4],
+ ['Supervolcán de Yellowstone',-110.6,44.4,14]
+];
+// [zona, lon, lat]
+var QUAKES=[
+ ['Chile',-72,-35],['Perú',-76,-12],['México',-100,17],['California',-118,34.5],['Alaska',-150,61],['Japón',140,36],['Filipinas',123,12],
+ ['Sumatra',102,-1],['Java',108,-7],['Nepal',85,28],['Irán',53,32],['Turquía',36,38],['Italia',13.5,42.5],['Grecia',23,38.5],['Nueva Zelanda',172,-42.5],
+ ['Papúa',145,-6],['Colombia',-76,4],['Centroamérica',-88,13],['Kamchatka',160,54],['Pakistán',68,30],['Sichuan',103,31],['el Rift de Etiopía',38,8],['Argelia',3,36.5],['Haití',-72.5,18.5]
+];
+// [zona de formación, lon, lat]
+var STORMS=[
+ ['el Caribe',-72,16.5],['el Golfo de México',-90,24.5],['el Atlántico Norte',-66,26],['el Mar de China',114,16],['el Pacífico occidental',132,16],
+ ['la Bahía de Bengala',88,15],['el Mar Arábigo',66,17],['el Índico sur',58,-18],['el Mar del Coral',155,-17],['el Pacífico mexicano',-108,15]
+];
+var SEEDS=[
+ ['Argentina',-64,-34],['Brasil',-52,-10],['Perú',-75,-10],['Colombia',-73,4],['Venezuela',-66,8],['Bolivia',-64,-17],['Chile',-71,-33],['Uruguay',-56,-33],['Paraguay',-58,-23],['Ecuador',-78,-1.5],['Guyana',-59,5],['Patagonia',-70,-47],
+ ['México',-102,23],['Estados Unidos',-98,39],['Texas',-99,31],['California',-120,37],['Canadá',-105,56],['Quebec',-72,51],['Alaska',-152,64],['Cuba',-79,21.5],['Groenlandia',-42,72],['Guatemala',-90.5,15.5],['Honduras',-86.5,14.8],['Panamá',-80,8.5],['Nicaragua',-85,12.8],
+ ['España',-4,40],['Portugal',-8,39.5],['Francia',2,46.5],['Reino Unido',-2,53],['Irlanda',-8,53],['Alemania',10,51],['Italia',12.5,42.5],['Polonia',20,52],['Suecia',16,62],['Noruega',9,61],['Finlandia',26,63],['Ucrania',31,49],['Bielorrusia',28,53.5],['Rumania',25,46],['Grecia',22,39],['Turquía',35,39],['Dinamarca',9.5,56],['Países Bajos',5.5,52],['Hungría',19,47],['Islandia',-19,65],
+ ['Rusia',45,57],['Siberia Oeste',80,62],['Yakutia',130,64],['Egipto',30,27],['Argelia',3,28],['Libia',18,27],['Marruecos',-6,32],['Túnez',9,34],['Malí',-3,17],['Níger',9,17],['Chad',18,15],['Nigeria',8,9],['Camerún',12,5],['Ghana',-1,8],['Senegal',-14,14.5],['Congo',23,-3],['Angola',17,-12],['Zambia',27,-14],['Mozambique',35,-17],['Namibia',17,-22],['Sudáfrica',24,-29],['Etiopía',40,8],['Sudán',30,15],['Kenia',38,0],['Tanzania',34,-6],['Somalia',46,5],['Madagascar',47,-19],
+ ['Arabia Saudita',45,24],['Irak',44,33],['Irán',54,32],['Pakistán',69,29],['Afganistán',66,34],['India',78,22],['Bangladés',90,24],['Birmania',96,21],['China',105,35],['Mongolia',103,47],['Kazajistán',67,48],['Uzbekistán',63,41],['Tailandia',101,15],['Vietnam',106,15],['Malasia',102,4],['Indonesia',113,-1],['Java',110,-7.5],['Filipinas',122,13],['Japón',138,37],['Corea',127,37],
+ ['Australia',134,-25],['Queensland',144,-22],['Nueva Gales',147,-32],['Australia Occ.',122,-26],['Territorio Norte',133,-19],['Papúa',143,-6],['Nueva Zelanda N',175,-38],['Nueva Zelanda S',170,-44]
+];
+var own,isCoast,tr,bR,bG,bB,waterC,baseOwn;   // own: -2 agua, -1 tierra libre, >=0 jugador
+var LAND_TOTAL=0;
+var ROUGH=[];
+
+function hash(x,y){var h=Math.imul(x,73856093)^Math.imul(y,19349663);h=Math.imul(h^(h>>>13),1274126177);h=h^(h>>>16);return h>>>0}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;var t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function subdiv(x0,y0,x1,y1,amp,minLen,rand,out){
+ var dx=x1-x0,dy=y1-y0,len=Math.sqrt(dx*dx+dy*dy);
+ if(len<minLen){out.push(x1,y1);return}
+ var mx=(x0+x1)/2,my=(y0+y1)/2,d=(rand()-.5)*2*amp*len;
+ mx+=(-dy/len)*d;my+=(dx/len)*d;
+ subdiv(x0,y0,mx,my,amp,minLen,rand,out);subdiv(mx,my,x1,y1,amp,minLen,rand,out);
+}
+function roughen(pl,seed,amp,minLen){
+ var rand=rng(seed),out=[pl[0],pl[1]],n=pl.length/2;
+ for(var i=0;i<n;i++){
+  var j=(i+1)%n;
+  subdiv(pl[2*i],pl[2*i+1],pl[2*j],pl[2*j+1],amp,minLen,rand,out);
+ }
+ var mnx=999,mxx=-999,mny=999,mxy=-999;
+ for(i=0;i<out.length;i+=2){mnx=Math.min(mnx,out[i]);mxx=Math.max(mxx,out[i]);mny=Math.min(mny,out[i+1]);mxy=Math.max(mxy,out[i+1])}
+ return {p:out,b:[mnx,mxx,mny,mxy]};
+}
+function fillPoly(pl,mark,val){
+ var n=pl.length/2,xs=new Array(GH),r,i;
+ for(r=0;r<GH;r++)xs[r]=null;
+ for(i=0;i<n;i++){
+  var j=(i+1)%n;
+  var x0=(pl[2*i]-LON0)/DLON,y0=(LAT0-pl[2*i+1])/DLAT,x1=(pl[2*j]-LON0)/DLON,y1=(LAT0-pl[2*j+1])/DLAT;
+  if(y0===y1)continue;
+  var ya=Math.min(y0,y1),yb=Math.max(y0,y1);
+  var r0=Math.max(0,Math.ceil(ya-.5)),r1=Math.min(GH-1,Math.ceil(yb-.5)-1);
+  for(r=r0;r<=r1;r++){
+   var x=x0+(r+.5-y0)*(x1-x0)/(y1-y0);
+   if(!xs[r])xs[r]=[];
+   xs[r].push(x);
+  }
+ }
+ for(r=0;r<GH;r++){
+  var a=xs[r];if(!a)continue;
+  a.sort(function(p,q){return p-q});
+  for(i=0;i+1<a.length;i+=2){
+   var c0=Math.max(0,Math.ceil(a[i]-.5)),c1=Math.min(GW-1,Math.ceil(a[i+1]-.5)-1);
+   for(var c=c0;c<=c1;c++)mark[r*GW+c]=val;
+  }
+ }
+}
+var TR_NAMES=['Llanura','Selva','Desierto','Hielo / tundra','Montaña','Alta montaña','Ceniza volcánica','Río'];
+var TR_MUL=[1,1.4,1.6,2,3,5,2,1.3];
+var DIS=1;
+function TMUL(c){var m=TR_MUL[c];if(DIS===0)return 1;if(DIS===2)return 1+(m-1)*1.5;return m}
+function segDist(px,py,ax,ay,bx,by){
+ var dx=bx-ax,dy=by-ay,l2=dx*dx+dy*dy,t=l2?((px-ax)*dx+(py-ay)*dy)/l2:0;
+ t=t<0?0:t>1?1:t;
+ var qx=ax+t*dx-px,qy=ay+t*dy-py;
+ return Math.sqrt(qx*qx+qy*qy);
+}
+function rasterLine(p,hw,cw,river){
+ for(var s=0;s+3<p.length;s+=2){
+  var ax=p[s],ay=p[s+1],bx=p[s+2],by=p[s+3],ext=hw*1.6+.3;
+  var x0=Math.max(0,Math.floor((Math.min(ax,bx)-ext-LON0)/DLON)),x1=Math.min(GW-1,Math.ceil((Math.max(ax,bx)+ext-LON0)/DLON));
+  var y0=Math.max(0,Math.floor((LAT0-Math.max(ay,by)-ext)/DLAT)),y1=Math.min(GH-1,Math.ceil((LAT0-Math.min(ay,by)+ext)/DLAT));
+  for(var y=y0;y<=y1;y++){
+   var lat=LAT0-(y+.5)*DLAT,cs=Math.cos(lat*0.0174533);
+   for(var x=x0;x<=x1;x++){
+    var i=y*GW+x;if(own[i]!==-1)continue;
+    var lon=LON0+(x+.5)*DLON,d=segDist(lon*cs,lat,ax*cs,ay,bx*cs,by),n=(hash(x>>1,y>>1)%1000)/1000;
+    if(river){
+     if(d<Math.max(hw,DLON*.5)*(.8+.4*n)&&tr[i]<4)tr[i]=7;
+    }else{
+     var w=hw*(.6+.8*n);
+     if(d<w&&tr[i]!==5)tr[i]=d<cw*(.3+.6*n)?5:4;
+    }
+   }
+  }
+ }
+}
+function loadMap(key){
+ var M=MAPS[key],x,y,i,k;
+ MAPKEY=key;LON0=M.lon0;LAT0=M.lat0;GW=M.gw;
+ DLON=(M.lon1-M.lon0)/GW;
+ GH=Math.round(GW*(M.lat0-M.lat1)/(M.lon1-M.lon0));
+ DLAT=(M.lat0-M.lat1)/GH;
+ N=GW*GH;K=GW/210;
+ own=new Int16Array(N);isCoast=new Uint8Array(N);tr=new Uint8Array(N);
+ bR=new Uint8Array(N);bG=new Uint8Array(N);bB=new Uint8Array(N);
+ waterC=new Uint32Array(N);baseOwn=new Int16Array(N);
+ bAt=new Array(N);for(i=0;i<N;i++)bAt[i]=null;
+ var mark=new Uint8Array(N),minL=Math.max(.14,DLON*.6);
+ function inBox(bb){return !(bb[1]<M.lon0||bb[0]>M.lon1||bb[3]<M.lat1||bb[2]>M.lat0)}
+ for(k=0;k<POLYS.length;k++){var R=roughen(POLYS[k],1234+k*77,.11,minL);if(inBox(R.b))fillPoly(R.p,mark,1)}
+ for(k=0;k<LAKES.length;k++){var L=roughen(LAKES[k],900+k*31,.1,Math.max(.1,DLON*.5));if(inBox(L.b))fillPoly(L.p,mark,0)}
+ LAND_TOTAL=0;
+ for(i=0;i<N;i++){own[i]=mark[i]?-1:-2;if(mark[i])LAND_TOTAL++}
+ E=Math.max(.3,LAND_TOTAL/BASE_LAND);
+ // ---- relieve real ----
+ for(y=0;y<GH;y++)for(x=0;x<GW;x++){
+  i=y*GW+x;if(own[i]!==-1)continue;
+  var lo=LON0+(x+.5)*DLON,la=LAT0-(y+.5)*DLAT;
+  var ni=(hash(x>>1,y>>1)%1000)/1000;
+  if(la>=65.5+ni*4||(la>=60&&lo>-75&&lo<-10&&la>=61+ni*3))tr[i]=3;
+ }
+ for(k=0;k<JUNGLES.length;k++){var J=roughen(JUNGLES[k],300+k*13,.18,.6);if(inBox(J.b))fillPoly(J.p,tr,1)}
+ for(k=0;k<DESERTS.length;k++){var D=roughen(DESERTS[k],500+k*17,.18,.6);if(inBox(D.b))fillPoly(D.p,tr,2)}
+ for(y=0;y<GH;y++)for(x=0;x<GW;x++){
+  i=y*GW+x;if(own[i]!==-1)continue;
+  var lo2=LON0+(x+.5)*DLON,la2=LAT0-(y+.5)*DLAT;
+  if(tr[i]===0&&lo2>95&&lo2<155&&Math.abs(la2)<7)tr[i]=1;
+ }
+ for(k=0;k<RANGES.length;k++){var RG=RANGES[k];rasterLine(RG.slice(2),RG[0],RG[1],false)}
+ for(k=0;k<RIVERS.length;k++)rasterLine(RIVERS[k],.22,0,true);
+ // ---- colores ----
+ for(y=0;y<GH;y++)for(x=0;x<GW;x++){
+  i=y*GW+x;
+  var lon=LON0+(x+.5)*DLON,lat=LAT0-(y+.5)*DLAT;
+  var n=(hash(x,y)%1000)/1000*.6+(hash(x>>2,y>>2)%1000)/1000*.4,r,g,b2,al=Math.abs(lat);
+  if(own[i]===-2){
+   var near=false;
+   for(var dy=-1;dy<=1;dy++)for(var dx=-1;dx<=1;dx++){
+    var xx=x+dx,yy=y+dy;if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+    if(own[yy*GW+xx]!==-2)near=true;
+   }
+   var v=(n-.5)*8;
+   if(near){r=24+v;g=58+v;b2=88+v}else{r=11+v;g=26+v;b2=44+v}
+   waterC[i]=(255<<24)|((b2|0)<<16)|((g|0)<<8)|(r|0);
+   continue;
+  }
+  var c=tr[i],w=(n-.5)*26;
+  if(c===3){r=218;g=228;b2=234;w*=.35}
+  else if(c===1){r=44;g=98;b2=52}
+  else if(c===2){r=190;g=164;b2=110}
+  else if(c===4){r=116;g=104;b2=90;w*=1.1;if(n>.85){r=160;g=156;b2=150}}
+  else if(c===5){r=206;g=208;b2=214;if(n<.3){r=132;g=128;b2=128}}
+  else if(c===7){r=70;g=126;b2=178;w*=.3}
+  else{
+   var t1=Math.max(0,Math.min(1,(al-12)/20)),t2=Math.max(0,Math.min(1,(al-32)/20));
+   r=64+32*t1-12*t2;g=112+16*t1-18*t2;b2=62+10*t1+6*t2;
+  }
+  bR[i]=Math.max(0,Math.min(255,r+w));bG[i]=Math.max(0,Math.min(255,g+w));bB[i]=Math.max(0,Math.min(255,b2+w*.6));
+  if((y>0&&own[i-GW]===-2)||(y<GH-1&&own[i+GW]===-2)||(x>0&&own[i-1]===-2)||(x<GW-1&&own[i+1]===-2))isCoast[i]=1;
+ }
+ for(i=0;i<N;i++)baseOwn[i]=own[i];
+ setupBuf();
+ setupDisasterLists();
+}
+function snapLand(lon,lat){
+ var cx=Math.floor((lon-LON0)/DLON),cy=Math.floor((LAT0-lat)/DLAT);
+ var RM=Math.ceil(8*K);
+ for(var r=0;r<RM;r++)for(var dy=-r;dy<=r;dy++)for(var dx=-r;dx<=r;dx++){
+  var x=cx+dx,y=cy+dy;if(x<0||y<0||x>=GW||y>=GH)continue;
+  if(own[y*GW+x]===-1)return y*GW+x;
+ }
+ return -1;
+}
+
+/* =============== DATOS DE EDIFICIOS Y ARMAS =============== */
+var ITEMS=[
+ {id:'city',k:'b',ico:'🏙️',name:'Ciudad',cost:400,r:12,rg:2,
+  desc:'Centro urbano. Cada nivel aumenta el máximo de tropas, da oro y genera tropas. Dentro de su radio tu territorio produce más oro.',
+  eff:function(l){return '+'+fmt(1000*l)+' tropas máx. · +'+(2*l)+' oro/s · +'+(2*l)+' tropas/s · +35% de oro de las celdas del radio'},
+  rad:'Zona urbana'},
+ {id:'factory',k:'b',ico:'🏭',name:'Fábrica',cost:800,r:14,rg:2,
+  desc:'Industria pesada. Produce mucho oro y abarata todo lo que construyas dentro de su radio.',
+  eff:function(l){return '+'+(6*l)+' oro/s · edificios dentro del radio cuestan −'+Math.min(60,15*l)+'%'},
+  rad:'Zona industrial'},
+ {id:'barracks',k:'b',ico:'⛺',name:'Cuartel',cost:600,r:12,rg:2,
+  desc:'Centro de reclutamiento. Acelera la generación de tropas: aporta tropas por segundo y más aún por cada celda tuya dentro de su radio.',
+  eff:function(l){return '+'+(4*l)+' tropas/s · +'+(0.03*l).toFixed(2)+' tropas/s por celda tuya en el radio'},
+  rad:'Zona de reclutamiento'},
+ {id:'defense',k:'b',ico:'🛡️',name:'Defensa',cost:300,r:10,rg:2,
+  desc:'Puesto de defensa. Los enemigos que invadan celdas dentro de su radio gastan muchas más tropas.',
+  eff:function(l){return 'Invadir celdas en el radio cuesta ×'+(2+0.4*l).toFixed(1)+' tropas'},
+  rad:'Zona fortificada'},
+ {id:'silo',k:'b',ico:'🚀',name:'Silo',cost:1500,r:45,rg:10,
+  desc:'Silo de misiles. Necesario para lanzar misiles y bombas nucleares. Su radio es el alcance máximo de tus armas.',
+  eff:function(l){return 'Alcance de misiles y nucleares'},
+  rad:'Alcance de misiles'},
+ {id:'port',k:'b',ico:'⚓',name:'Puerto',cost:500,r:40,rg:10,
+  desc:'Puerto. Permite invadir por mar (modo naval 🚢) y colocar buques de guerra. Además genera oro por comercio.',
+  eff:function(l){return '+'+(3*l)+' oro/s · Alcance de barcos'},
+  rad:'Alcance naval',coast:true},
+ {id:'sam',k:'b',ico:'📡',name:'SAM',cost:1200,r:14,rg:3,
+  desc:'Defensa antiaérea. Intenta interceptar misiles, bombarderos y nucleares que apunten a celdas dentro de su radio.',
+  eff:function(l){return 'Intercepta: '+Math.min(90,40+10*l)+'% (nucleares '+Math.min(75,25+10*l)+'%)'},
+  rad:'Zona antiaérea'},
+ {id:'airport',k:'b',ico:'🛩️',name:'Aeródromo',cost:1000,r:40,rg:10,
+  desc:'Aeródromo. Habilita el modo de ataque aéreo ✈️: cada bombardeo cuesta 200 de oro, destruye edificios y mata tropas en una zona pequeña.',
+  eff:function(l){return 'Alcance de bombarderos'},
+  rad:'Alcance aéreo'},
+ {id:'lab',k:'b',ico:'🔬',name:'Laboratorio',cost:900,r:10,rg:2,
+  desc:'Centro de investigación. Genera puntos de investigación para el árbol de habilidades 🌳 (cada nivel suma más).',
+  eff:function(l){return '+'+(1.5*l)+' puntos de investigación/s'},
+  rad:'Zona científica'},
+ {id:'ship',k:'w',ico:'🚢',name:'Buque',cost:800,r:12,rg:0,
+  desc:'Buque de guerra. Se coloca en el mar dentro del radio de uno de tus puertos. Bombardea las costas enemigas cercanas: mata tropas y daña edificios.',
+  eff:function(l){return 'Radio de fuego 12'},
+  rad:'Radio de fuego'},
+ {id:'carrier',k:'w',ico:'🛳️',name:'Portaaviones',cost:2000,r:40,rg:0,
+  desc:'Base aérea flotante. Se coloca en el mar dentro del radio de un puerto y permite bombardear (✈️) objetivos a su alcance. Se puede mover tocándolo y luego el mar. Máx. 3.',
+  eff:function(l){return 'Alcance de bombarderos 40'},
+  rad:'Alcance aéreo'},
+ {id:'missile',k:'w',ico:'🎯',name:'Misil',cost:250,r:2,rg:0,
+  desc:'Misil convencional. Impacto pequeño: daña un edificio y mata el 5% de las tropas del dueño. Lo lanzas desde un silo dentro de su alcance.',
+  eff:function(l){return 'Radio de impacto 2'},
+  rad:'Radio de impacto'},
+ {id:'nuke',k:'w',ico:'☢️',name:'Nuclear',cost:3000,r:6.5,rg:0,
+  desc:'Bomba nuclear. Arrasa el territorio en su radio (queda libre), destruye edificios y mata el 40% de las tropas de los afectados. Los SAM pueden interceptarla.',
+  eff:function(l){return 'Radio de impacto 6.5'},
+  rad:'Radio de impacto'}
+];
+var IT={};ITEMS.forEach(function(it){IT[it.id]=it});
+var MODES={
+ terr:'⚔️ <b>Modo terrestre</b>: toca un territorio vecino (o tierra libre) para atacarlo con el % de tropas elegido.',
+ naval:'🚢 <b>Modo naval</b>: requiere un puerto. Toca la costa del objetivo: un barco transporta el % de tropas y desembarca.',
+ air:'✈️ <b>Modo aéreo</b>: requiere un aeródromo. Toca el objetivo: un bombardero (200 de oro) daña edificios y mata tropas.'
+};
+var TRAIN_MAX=6;
+function trainCost(l){return 600*(l+1)}
+
+/* =============== ESTADO =============== */
+var P=[],me=null,state='menu',paused=false,speed=1,gt=0,acc=0,dirty=true;
+var bAt=new Array(N);
+var flights=[],ships=[],fx=[];
+var mode='terr',placing=null,selB=null,infoOpen=false;
+var NB=22,WIN=0.85,SPAWN_PROTECT=60000,DIFF=.8;
+
+var imgdata,pix,mc,mctx;
+function setupBuf(){
+ mc=document.createElement('canvas');mc.width=GW;mc.height=GH;
+ mctx=mc.getContext('2d');imgdata=mctx.createImageData(GW,GH);
+ pix=new Uint32Array(imgdata.data.buffer);
+}
+function paint(i){
+ var o=own[i];
+ if(o===-2){pix[i]=waterC[i];return}
+ var br=bR[i],bg=bG[i],bb=bB[i];
+ if(o===-1){pix[i]=(255<<24)|(bb<<16)|(bg<<8)|br;return}
+ var c=P[o].c,x=i%GW,edge=false;
+ if(i>=GW&&own[i-GW]!==o)edge=true;
+ else if(i<N-GW&&own[i+GW]!==o)edge=true;
+ else if(x>0&&own[i-1]!==o)edge=true;
+ else if(x<GW-1&&own[i+1]!==o)edge=true;
+ var r,g,b;
+ if(edge){r=c[0]*.75;g=c[1]*.75;b=c[2]*.75}
+ else{r=br*.32+c[0]*.68;g=bg*.32+c[1]*.68;b=bb*.32+c[2]*.68}
+ pix[i]=(255<<24)|((b|0)<<16)|((g|0)<<8)|(r|0);
+}
+function paintAround(i){
+ paint(i);var x=i%GW;
+ if(i>=GW)paint(i-GW);if(i<N-GW)paint(i+GW);
+ if(x>0)paint(i-1);if(x<GW-1)paint(i+1);
+ dirty=true;
+}
+function setOwner(i,o){
+ var old=own[i];if(old===o)return;
+ var x=i%GW,y=(i/GW)|0;
+ if(old>=0){var a=P[old];a.cells--;a.sx-=x;a.sy-=y}
+ own[i]=o;
+ if(o>=0){var q=P[o];q.cells++;q.sx+=x;q.sy+=y;q.rc[q.rn&127]=i;q.rn++}
+ var b=bAt[i];
+ if(b){
+  if(o<0)removeBuilding(b);
+  else if(b.o!==o){
+   var ol=P[b.o].bld,k=ol.indexOf(b);if(k>=0)ol.splice(k,1);
+   b.o=o;P[o].bld.push(b);
+  }
+ }
+ paintAround(i);
+}
+function addBuilding(p,t,i){
+ var b={t:t,lv:1,o:p.id,i:i,x:i%GW,y:(i/GW)|0};
+ bAt[i]=b;p.bld.push(b);return b;
+}
+function removeBuilding(b){
+ bAt[b.i]=null;var l=P[b.o].bld,k=l.indexOf(b);if(k>=0)l.splice(k,1);
+ if(selB===b){selB=null;closeInfo()}
+}
+function rad(b){
+ var it=IT[b.t],m=P[b.o].mod,r=(it.r+it.rg*(b.lv-1))*K;
+ if(b.t==='silo'||b.t==='port'||b.t==='airport')r*=m.rng;else if(b.t==='sam')r*=m.samR;
+ return r;
+}
+function itR(it){return it.r*K}
+function dist2(ax,ay,bx,by){return (ax-bx)*(ax-bx)+(ay-by)*(ay-by)}
+
+/* =============== JUGADORES =============== */
+function hsl(h,s,l){
+ h/=360;var r,g,b;
+ function f(p,q,t){if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p}
+ var q=l<.5?l*(1+s):l+s-l*s,p=2*l-q;
+ r=f(p,q,h+1/3);g=f(p,q,h);b=f(p,q,h-1/3);
+ return [(r*255)|0,(g*255)|0,(b*255)|0];
+}
+function newPlayer(id,name,col,bot){
+ var p={id:id,name:name,c:col,bot:bot,alive:true,spawned:false,troops:0,gold:0,cells:0,sx:0,sy:0,
+  maxT:3000,growth:0,income:0,bld:[],attacks:[],train:0,rc:new Int32Array(128),rn:0,aggr:.5+Math.random()*.7,nextAI:0,born:0,
+  sk:[],doc:'none',rp:0,rpRate:0,al:{},tru:{},dipCd:0,traitor:0,mod:null};
+ calcMods(p);
+ return p;
+}
+function recalc(p){
+ var m=p.mod,sq=Math.sqrt(E),maxT=3000+30*p.cells/E,inc=2+.35*p.cells/E,urban=0,k,b,gAdd=0,rpr=.5;
+ for(k=0;k<p.bld.length;k++){
+  b=p.bld[k];
+  if(b.t==='city'){
+   maxT+=1000*b.lv;inc+=2*b.lv;gAdd+=2*b.lv;rpr+=.3*b.lv;
+   var r=rad(b),r2=r*r,x0=Math.max(0,Math.floor(b.x-r)),x1=Math.min(GW-1,Math.ceil(b.x+r)),y0=Math.max(0,Math.floor(b.y-r)),y1=Math.min(GH-1,Math.ceil(b.y+r));
+   for(var yy=y0;yy<=y1;yy++)for(var xx=x0;xx<=x1;xx++)if(dist2(xx,yy,b.x,b.y)<=r2&&own[yy*GW+xx]===p.id)urban++;
+  }else if(b.t==='barracks'){
+   gAdd+=4*b.lv;
+   var rb=rad(b),rb2=rb*rb,bx0=Math.max(0,Math.floor(b.x-rb)),bx1=Math.min(GW-1,Math.ceil(b.x+rb)),by0=Math.max(0,Math.floor(b.y-rb)),by1=Math.min(GH-1,Math.ceil(b.y+rb)),cov=0;
+   for(var yb=by0;yb<=by1;yb++)for(var xb=bx0;xb<=bx1;xb++)if(dist2(xb,yb,b.x,b.y)<=rb2&&own[yb*GW+xb]===p.id)cov++;
+   gAdd+=.03*b.lv*Math.min(cov,p.cells)/E;
+  }else if(b.t==='factory')inc+=6*b.lv;
+  else if(b.t==='lab')rpr+=1.5*b.lv;
+  else if(b.t==='port'){
+   var blk=false;
+   for(var si=0;si<ships.length;si++){
+    var sh=ships[si];
+    if(sh.t==='ship'&&sh.o!==p.id&&atWar(P[sh.o],p)&&dist2(sh.x,sh.y,b.x+.5,b.y+.5)<=64*K*K){blk=true;if(P[sh.o]===me)ach('block');break}
+   }
+   if(blk&&!b.blk&&p===me)toast('⚓ ¡Un buque enemigo bloquea tu puerto!');
+   b.blk=blk;if(!blk)inc+=3*b.lv;
+  }
+ }
+ for(k=0;k<RLIST.length;k++){
+  var nd=RLIST[k];if(own[nd.cell]!==p.id)continue;
+  if(nd.t==='oil')inc+=9*sq;else if(nd.t==='min'){inc+=4*sq;rpr+=1.2}else{maxT+=700*sq;gAdd+=2.5*sq}
+ }
+ inc+=.35*Math.min(urban,p.cells)/E;
+ var am=1+.04*Math.min(3,countAllies(p));
+ p.maxT=maxT*m.maxT;p.income=inc*m.gold*am;p.rpRate=rpr*m.rp;
+ var T=p.troops,mx=p.maxT,g=T<mx?(.02*T*(1-T/mx)+3+gAdd*(p.bot?.5:1)):-(T-mx)*.05;
+ p.growth=g*(1+.08*p.train)*m.grow*am;
+}
+function hasB(p,t){for(var i=0;i<p.bld.length;i++)if(p.bld[i].t===t)return true;return false}
+function countB(p,t){var n=0;for(var i=0;i<p.bld.length;i++)if(p.bld[i].t===t)n++;return n}
+function costOf(it,p,cell){
+ if(it.k==='w')return Math.round(it.cost*p.mod.wcost);
+ var c=it.cost*(1+.5*countB(p,it.id))*p.mod.build;
+ if(cell!=null&&cell>=0){
+  var x=cell%GW,y=(cell/GW)|0,d=0;
+  for(var i=0;i<p.bld.length;i++){
+   var f=p.bld[i];
+   if(f.t==='factory'){var r=rad(f);if(dist2(x,y,f.x,f.y)<=r*r)d+=.15*f.lv}
+  }
+  c*=1-Math.min(.6,d);
+ }
+ return Math.round(c);
+}
+
+/* =============== ATAQUES =============== */
+function buildFront(pid,t){
+ var q=[],i,x;
+ for(i=0;i<N;i++){
+  if(own[i]!==t)continue;
+  x=i%GW;
+  if((i>=GW&&own[i-GW]===pid)||(i<N-GW&&own[i+GW]===pid)||(x>0&&own[i-1]===pid)||(x<GW-1&&own[i+1]===pid))q.push(i);
+ }
+ return q;
+}
+function findAttack(p,t){for(var i=0;i<p.attacks.length;i++)if(p.attacks[i].t===t)return p.attacks[i];return null}
+function addAttack(p,t,amt,q){
+ var a=findAttack(p,t);
+ if(a){a.troops+=amt;a.q=q;a.h=0}
+ else p.attacks.push({t:t,troops:amt,q:q,h:0});
+}
+function startAttack(p,t,amt){
+ if(t===p.id||t===-2)return false;
+ if(t>=0&&!atWar(p,P[t]))return false;
+ var q=buildFront(p.id,t);
+ if(!q.length)return false;
+ p.troops-=amt;
+ addAttack(p,t,amt,q);
+ return true;
+}
+function cellCost(p,t,c){
+ var am=Math.max(.3,Math.max(.4,1-.10*p.train)*p.mod.atk),gm=1+8*p.cells/LAND_TOTAL,tm=1+(TMUL(tr[c])-1)*p.mod.terr;
+ if(t<0)return 16*am*gm/E*tm;
+ var B=P[t],d=B.troops/Math.max(1,B.cells),cost=(8*gm/E+d*.5*(1+.08*B.train))*am*B.mod.def;
+ if(B.bld.length){
+  var x=c%GW,y=(c/GW)|0;
+  for(var k=0;k<B.bld.length;k++){
+   var b=B.bld[k];
+   if(b.t==='defense'){var r=rad(b);if(dist2(x,y,b.x,b.y)<=r*r){cost*=2+.4*b.lv;break}}
+  }
+ }
+ return cost*tm;
+}
+function processAttacks(p){
+ for(var ai=p.attacks.length-1;ai>=0;ai--){
+  var a=p.attacks[ai],n=Math.ceil(E*(1+Math.sqrt(p.cells/E)/3)*p.mod.spd),done=false,guard=n*6;
+  var tgt=a.t>=0?P[a.t]:null;
+  if(tgt&&!tgt.alive)done=true;
+  while(n>0&&guard>0&&!done){
+   guard--;
+   if(a.h>=a.q.length){done=true;break}
+   var m=Math.min(10,a.q.length-a.h),k=a.h+((Math.random()*m)|0),c=a.q[k];
+   a.q[k]=a.q[a.h];a.h++;
+   if(own[c]!==a.t)continue;
+   var cost=cellCost(p,a.t,c);
+   if(a.troops<cost){done=true;break}
+   a.troops-=cost;
+   a.troops+=cost*(tgt?.25:.10)*(p.bot?.5:1)*p.mod.loot;
+   if(tgt){var d=tgt.troops/Math.max(1,tgt.cells);tgt.troops=Math.max(0,tgt.troops-d*.25)}
+   setOwner(c,p.id);
+   if(p===me){if(tgt)ach('first');if(tr[c]===5){ST.mount++;if(ST.mount>=60)ach('mount')}}
+   var x=c%GW;
+   if(c>=GW&&own[c-GW]===a.t)a.q.push(c-GW);
+   if(c<N-GW&&own[c+GW]===a.t)a.q.push(c+GW);
+   if(x>0&&own[c-1]===a.t)a.q.push(c-1);
+   if(x<GW-1&&own[c+1]===a.t)a.q.push(c+1);
+   n--;
+   if(tgt&&tgt.cells===0){eliminate(tgt,p);done=true}
+  }
+  if(done){p.troops+=Math.max(0,a.troops);p.attacks.splice(ai,1)}
+  else if(a.h>800){a.q=a.q.slice(a.h);a.h=0}
+ }
+}
+function eliminate(B,A){
+ if(!B.alive)return;
+ B.alive=false;B.troops=0;B.attacks=[];
+ if(A===me){ST.elim++;if(ST.elim>=3)ach('elim')}
+ if(A){A.gold+=Math.floor(B.gold*.5)}
+ ships=ships.filter(function(s){return s.o!==B.id});
+ toast(B.name+(A?' fue eliminado por '+A.name:' fue eliminado'));
+ if(B===me)endGame(false);
+}
+
+/* =============== IA =============== */
+function aiThink(p){
+ var cx=(p.sx/Math.max(1,p.cells));
+ // construir
+ if(p.gold>700&&Math.random()<.4){
+  var types=['city','city','factory','defense','barracks'],t=types[(Math.random()*types.length)|0],it=IT[t];
+  var tries=12;
+  while(tries--){
+   var i=p.rc[(Math.random()*Math.min(128,p.rn))|0];
+   if(own[i]!==p.id||bAt[i])continue;
+   var ok=true,x=i%GW,y=(i/GW)|0;
+   for(var k=0;k<p.bld.length;k++)if(dist2(x,y,p.bld[k].x,p.bld[k].y)<9*K*K){ok=false;break}
+   if(!ok)continue;
+   var c=costOf(it,p,i);
+   if(p.gold>=c){p.gold-=c;addBuilding(p,t,i)}
+   break;
+  }
+ }
+ if(p.attacks.length>=2||p.troops<p.maxT*.4)return;
+ var found={},any=false,tries2=50,k2;
+ var lim=Math.min(128,p.rn);
+ while(tries2--){
+  var i2=p.rc[(Math.random()*lim)|0];
+  if(own[i2]!==p.id)continue;
+  var x2=i2%GW,nb=[i2-GW,i2+GW,x2>0?i2-1:-1,x2<GW-1?i2+1:-1];
+  for(k2=0;k2<4;k2++){
+   var j=nb[k2];if(j<0||j>=N)continue;
+   var o=own[j];if(o===-2||o===p.id)continue;
+   found[o]=(found[o]||0)+1;any=true;
+  }
+ }
+ if(!any)return;
+ var amt=Math.floor(p.troops*(.2+.25*p.aggr)*Math.min(1.3,DIFF+.2)),target=null,best=1e18;
+ if(found[-1]&&Math.random()<.75)target=-1;
+ else{
+  for(var key in found){
+   var o2=+key;if(o2<0)continue;
+   var q=P[o2];if(!q.alive||!atWar(p,q))continue;
+   if(q===me&&gt<SPAWN_PROTECT)continue;
+   var score=q.troops/Math.max(1,q.cells)+Math.random()*8;
+   if(amt>q.troops*.35+300&&score<best){best=score;target=o2}
+  }
+  if(target===null&&found[-1])target=-1;
+ }
+ if(target===null||amt<60)return;
+ startAttack(p,target,amt);
+}
+
+/* =============== VUELOS / ARMAS =============== */
+function nearestB(p,type,cell,needRange){
+ var x=cell%GW,y=(cell/GW)|0,best=null,bd=1e18;
+ for(var i=0;i<p.bld.length;i++){
+  var b=p.bld[i];if(b.t!==type)continue;
+  var d=dist2(x,y,b.x,b.y);
+  if(needRange&&d>rad(b)*rad(b))continue;
+  if(d<bd){bd=d;best=b}
+ }
+ return best;
+}
+function inRangeOf(p,type,cell){return nearestB(p,type,cell,true)}
+function launch(kind,p,from,tgt,extra){
+ var x1=tgt%GW+.5,y1=((tgt/GW)|0)+.5;
+ var d=Math.sqrt(dist2(from.x+.5,from.y+.5,x1,y1));
+ var spd=(kind==='boat'?10:kind==='bomb'?12:kind==='miss'?32:20)*K;
+ flights.push({k:kind,o:p.id,x0:from.x+.5,y0:from.y+.5,x1:x1,y1:y1,t0:gt,dur:Math.max(700,d/spd*1000),tgt:tgt,troops:extra||0});
+}
+function intercepted(owner,cell,kind){
+ if(owner<0)return false;
+ var q=P[owner],x=cell%GW,y=(cell/GW)|0;
+ for(var i=0;i<q.bld.length;i++){
+  var b=q.bld[i];if(b.t!=='sam')continue;
+  var r=rad(b);
+  if(dist2(x,y,b.x,b.y)<=r*r){
+   var ch=kind==='nuke'?Math.min(.75,.25+.1*b.lv):Math.min(.9,.4+.1*b.lv);
+   if(Math.random()<Math.min(.95,ch+q.mod.sam))return true;
+  }
+ }
+ return false;
+}
+function damageB(b){if(b.lv>1)b.lv--;else removeBuilding(b)}
+function areaHit(cell,r,troopFrac,attacker){
+ var x0=cell%GW,y0=(cell/GW)|0,seen={},R=Math.ceil(r);
+ for(var yy=y0-R;yy<=y0+R;yy++)for(var xx=x0-R;xx<=x0+R;xx++){
+  if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+  if(dist2(xx,yy,x0,y0)>r*r)continue;
+  var i=yy*GW+xx,o=own[i];
+  if(o<0)continue;
+  if(!seen[o]){seen[o]=1}
+  var b=bAt[i];if(b)damageB(b);
+ }
+ for(var key in seen){
+  var q=P[+key];
+  if(q.id!==attacker||true){q.troops=Math.max(0,q.troops*(1-troopFrac*q.mod.wres))}
+ }
+}
+function impact(f){
+ var p=P[f.o],tgt=f.tgt,owner=own[tgt],x=tgt%GW+.5,y=((tgt/GW)|0)+.5;
+ if(f.k==='boat'){
+  var t=own[tgt];
+  if(t>=0&&!atWar(p,P[t])){p.troops+=f.troops;return}
+  if(t===-2){p.troops+=f.troops;return}
+  if(t===p.id){p.troops+=f.troops;if(p===me)toast('Tropas desembarcadas');return}
+  setOwner(tgt,p.id);
+  var q=buildFront(p.id,t);
+  if(q.length)addAttack(p,t,f.troops,q);else p.troops+=f.troops;
+  if(P[t]&&t>=0&&P[t].cells===0)eliminate(P[t],p);
+  fx.push({x:x,y:y,r:2.5,t0:gt,dur:600,c:'255,255,255'});
+  return;
+ }
+ if(f.k==='bomb'||f.k==='miss'||f.k==='nuke'){
+  if(intercepted(owner,tgt,f.k)){
+   fx.push({x:x,y:y,r:2,t0:gt,dur:700,c:'120,200,255'});
+   if(P[owner]===me||p===me)toast('🛡️ ¡Interceptado por un SAM!');
+   return;
+  }
+  snd(f.k==='nuke'?'boom':'small');
+  if(f.k==='nuke'){
+   var R=6.5*K*p.mod.nukeR,RC=Math.ceil(R),x0=tgt%GW,y0=(tgt/GW)|0,aff={};
+   for(var yy=y0-RC;yy<=y0+RC;yy++)for(var xx=x0-RC;xx<=x0+RC;xx++){
+    if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+    if(dist2(xx,yy,x0,y0)>R*R)continue;
+    var i=yy*GW+xx,o=own[i];
+    if(o>=0){aff[o]=1;setOwner(i,-1)}
+    else if(o===-1&&bAt[i])removeBuilding(bAt[i]);
+   }
+   for(var key in aff){
+    var pp=P[+key];pp.troops*=1-.4*pp.mod.wres;
+    if(pp.cells===0&&pp.alive)eliminate(pp,p);
+   }
+   fx.push({x:x,y:y,r:R,t0:gt,dur:1800,c:'255,170,60'});
+   if(p===me||owner===me.id)toast('☢️ ¡Explosión nuclear!');
+  }else if(f.k==='miss'){
+   areaHit(tgt,2*K*p.mod.missR,.05,p.id);
+   fx.push({x:x,y:y,r:2.2*K*p.mod.missR,t0:gt,dur:700,c:'255,120,60'});
+  }else{
+   areaHit(tgt,2.5*K*p.mod.bombR,.08,p.id);
+   fx.push({x:x,y:y,r:3*K*p.mod.bombR,t0:gt,dur:800,c:'255,150,60'});
+  }
+  var ow=own[tgt];
+  if(ow>=0&&P[ow].cells===0&&P[ow].alive)eliminate(P[ow],p);
+ }
+}
+function shipsTick(){
+ for(var s=0;s<ships.length;s++){
+  var sh=ships[s];
+  if(sh.tx!=null){
+   var mdx=sh.tx-sh.x,mdy=sh.ty-sh.y,ml=Math.sqrt(mdx*mdx+mdy*mdy),mst=3*K*.1;
+   if(ml<=mst){sh.x=sh.tx;sh.y=sh.ty;sh.tx=null}
+   else{
+    var nx=sh.x+mdx/ml*mst,ny=sh.y+mdy/ml*mst;
+    if(own[Math.floor(ny)*GW+Math.floor(nx)]===-2){sh.x=nx;sh.y=ny}else sh.tx=null;
+   }
+  }
+  if(sh.t==='carrier')continue;
+  if(gt<sh.next)continue;
+  sh.next=gt+3000;
+  for(var tr=0;tr<30;tr++){
+   var a=Math.random()*6.283,r=Math.random()*12*K,xx=Math.floor(sh.x+Math.cos(a)*r),yy=Math.floor(sh.y+Math.sin(a)*r);
+   if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+   var i=yy*GW+xx,o=own[i];
+   if(o<0||o===sh.o)continue;
+   var q=P[o];
+   if(!atWar(P[sh.o],q))continue;
+   q.troops=Math.max(0,q.troops*.99-10);
+   var b=bAt[i];if(b&&Math.random()<.35)damageB(b);
+   fx.push({x:xx+.5,y:yy+.5,r:1.2*K,t0:gt,dur:450,c:'255,200,80'});
+   fx.push({l:1,x0:sh.x,y0:sh.y,x:xx+.5,y:yy+.5,t0:gt,dur:250});
+   break;
+  }
+ }
+}
+
+/* =============== DESASTRES NATURALES =============== */
+var dpend=[],storms=[],nextDis=0,VLIST=[],QLIST=[],HLIST=[];
+function llCell(lon,lat){
+ var x=Math.floor((lon-LON0)/DLON),y=Math.floor((LAT0-lat)/DLAT);
+ if(x<0||y<0||x>=GW||y>=GH)return -1;
+ return y*GW+x;
+}
+function nearCell(cx,cy,rmax,water){
+ for(var r=0;r<=rmax;r++)for(var dy=-r;dy<=r;dy++)for(var dx=-r;dx<=r;dx++){
+  if(Math.max(Math.abs(dx),Math.abs(dy))!==r)continue;
+  var x=cx+dx,y=cy+dy;if(x<0||y<0||x>=GW||y>=GH)continue;
+  var w=own[y*GW+x]===-2;
+  if(water?w:!w)return y*GW+x;
+ }
+ return -1;
+}
+function setupDisasterLists(){
+ VLIST=[];QLIST=[];HLIST=[];setupResources();
+ VOLC.forEach(function(v){
+  var c=llCell(v[1],v[2]);if(c<0)return;
+  if(own[c]===-2){c=nearCell(c%GW,(c/GW)|0,Math.ceil(3*K),false);if(c<0)return}
+  VLIST.push({name:v[0],x:c%GW,y:(c/GW)|0,r:v[3]});
+ });
+ QUAKES.forEach(function(q){if(llCell(q[1],q[2])>=0)QLIST.push({name:q[0],lon:q[1],lat:q[2]})});
+ STORMS.forEach(function(h){var c=llCell(h[1],h[2]);if(c>=0)HLIST.push({name:h[0],cell:c})});
+}
+function setAsh(i){var n=(hash(i,7)%1000)/1000;bR[i]=62+n*14;bG[i]=54+n*10;bB[i]=52+n*10}
+function scheduleDisaster(first){nextDis=gt+(first?60000:50000+Math.random()*50000)/(DIS===2?2.2:1)}
+function ownersHit(aff,frac){
+ for(var key in aff){var q=P[+key];if(!q||!q.alive)continue;q.troops*=1-frac*q.mod.dres;if(q.cells===0)eliminate(q,null)}
+}
+function erupt(v){
+ var r=v.r*K*(DIS===2?1.3:1),R=Math.ceil(r*1.3),x0=v.x,y0=v.y,aff={},big=v.r>=12;
+ for(var yy=y0-R;yy<=y0+R;yy++)for(var xx=x0-R;xx<=x0+R;xx++){
+  if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+  var d2=dist2(xx,yy,x0,y0);if(d2>r*r*1.7)continue;
+  var i=yy*GW+xx,o=own[i];if(o===-2)continue;
+  var n=(hash(xx,yy)%1000)/1000;if(Math.sqrt(d2)>r*(.7+.5*n))continue;
+  tr[i]=6;setAsh(i);
+  if(o>=0){aff[o]=1;setOwner(i,-1)}else paintAround(i);
+ }
+ ownersHit(aff,big?.25:.1);
+ fx.push({x:x0+.5,y:y0+.5,r:r,t0:gt,dur:2600,c:'255,90,30'});
+ snd('boom');toast('🌋 ¡'+v.name+' entró en erupción!',3500);
+}
+function quake(){
+ if(!QLIST.length)return false;
+ var q=QLIST[(Math.random()*QLIST.length)|0];
+ var c=llCell(q.lon+(Math.random()-.5)*3,q.lat+(Math.random()-.5)*3);
+ if(c<0)return false;
+ c=nearCell(c%GW,(c/GW)|0,Math.ceil(4*K),false);if(c<0)return false;
+ var x0=c%GW,y0=(c/GW)|0,R=5.5*K*(DIS===2?1.35:1),RC=Math.ceil(R),aff={},coast=0;
+ for(var yy=y0-RC;yy<=y0+RC;yy++)for(var xx=x0-RC;xx<=x0+RC;xx++){
+  if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+  if(dist2(xx,yy,x0,y0)>R*R)continue;
+  var i=yy*GW+xx,o=own[i];
+  if(isCoast[i])coast++;
+  if(o<0)continue;
+  aff[o]=1;
+  var b=bAt[i];if(b&&Math.random()<.5*P[o].mod.dres)damageB(b);
+ }
+ ownersHit(aff,.04);
+ fx.push({x:x0+.5,y:y0+.5,r:R,t0:gt,dur:1400,c:'255,220,120'});
+ fx.push({x:x0+.5,y:y0+.5,r:R*.55,t0:gt,dur:900,c:'255,170,80'});
+ var mag=(5.8+Math.random()*2.3).toFixed(1),tsu=coast>=Math.max(4,3*K)&&Math.random()<.7;
+ snd('quake');toast('🌍 ¡Terremoto de magnitud '+mag+' en '+q.name+'!'+(tsu?' ⚠️ Alerta de tsunami':''),3800);
+ if(tsu)dpend.push({k:'tsu',x:x0,y:y0,fire:gt+9000,r:10*K*(DIS===2?1.3:1)});
+ return true;
+}
+function tsunami(e){
+ var R=e.r,RC=Math.ceil(R),aff={};
+ for(var yy=e.y-RC;yy<=e.y+RC;yy++)for(var xx=e.x-RC;xx<=e.x+RC;xx++){
+  if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+  if(dist2(xx,yy,e.x,e.y)>R*R)continue;
+  var i=yy*GW+xx;if(!isCoast[i])continue;
+  var o=own[i];if(o<0)continue;
+  aff[o]=1;
+  var b=bAt[i];if(b&&Math.random()<P[o].mod.dres)removeBuilding(b);
+ }
+ ownersHit(aff,.03);
+ fx.push({x:e.x+.5,y:e.y+.5,r:R,t0:gt,dur:2200,c:'80,170,255'});
+ snd('wave');toast('🌊 ¡El tsunami golpea la costa!',3200);
+}
+function hurricane(h){
+ var c=h.cell,sx=c%GW,sy=(c/GW)|0;
+ if(own[c]!==-2){c=nearCell(sx,sy,Math.ceil(6*K),true);if(c<0)return false;sx=c%GW;sy=(c/GW)|0}
+ var best=-1,bd=1e18,i;
+ for(i=0;i<N;i++){if(own[i]===-2)continue;var d=dist2(i%GW,(i/GW)|0,sx,sy);if(d<bd){bd=d;best=i}}
+ if(best<0)return false;
+ var dx=best%GW-sx,dy=((best/GW)|0)-sy,l=Math.sqrt(dx*dx+dy*dy)||1;
+ storms.push({name:h.name,x:sx+.5,y:sy+.5,dx:dx/l,dy:dy/l,t0:gt,life:Math.max(26000,l/(3*K)*1000+14000),next:gt+1500});
+ snd('alert');toast('🌀 Se forma un huracán en '+h.name+' y avanza hacia la costa',3800);
+ return true;
+}
+function stormHit(st){
+ var R=4.2*K*(DIS===2?1.3:1),RC=Math.ceil(R),x0=Math.floor(st.x),y0=Math.floor(st.y),aff={};
+ for(var yy=y0-RC;yy<=y0+RC;yy++)for(var xx=x0-RC;xx<=x0+RC;xx++){
+  if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+  if(dist2(xx,yy,x0,y0)>R*R)continue;
+  var i=yy*GW+xx,o=own[i];if(o<0)continue;
+  aff[o]=1;
+  var b=bAt[i];if(b&&Math.random()<.12*P[o].mod.dres)damageB(b);
+ }
+ ownersHit(aff,.008);
+}
+function doDisaster(){
+ var r=Math.random(),ok=false;
+ ST.dis++;if(ST.dis>=10)ach('witness');
+ if(r<.36&&VLIST.length){
+  var pool=VLIST.filter(function(v){return v.r<12||(DIS===2&&Math.random()<.35)});
+  if(pool.length){
+   var v=pool[(Math.random()*pool.length)|0];
+   dpend.push({k:'volc',v:v,fire:gt+12000});
+   snd('alert');toast('🌋 '+v.name+' retumba... ¡erupción en 12 s!',3800);ok=true;
+  }
+ }else if(r>=.72&&HLIST.length){
+  ok=hurricane(HLIST[(Math.random()*HLIST.length)|0]);
+ }
+ if(!ok)quake();
+}
+function disasterTick(){
+ var i,e;
+ for(i=dpend.length-1;i>=0;i--){
+  e=dpend[i];
+  if(gt>=e.fire){dpend.splice(i,1);if(e.k==='volc')erupt(e.v);else tsunami(e)}
+ }
+ for(i=storms.length-1;i>=0;i--){
+  var st=storms[i];
+  st.x+=st.dx*3*K*.1;st.y+=st.dy*3*K*.1;
+  if(gt-st.t0>st.life||st.x<0||st.y<0||st.x>=GW||st.y>=GH){storms.splice(i,1);continue}
+  if(gt>=st.next){st.next=gt+1500;stormHit(st)}
+ }
+ if(DIS>0&&gt>=nextDis){doDisaster();scheduleDisaster(false)}
+}
+
+/* =============== EXTENSIONES =============== */
+var selS=null;
+function hasCarrier(p){for(var i=0;i<ships.length;i++)if(ships[i].o===p.id&&ships[i].t==='carrier')return true;return false}
+function airOrigin(p,cell){
+ var ap=inRangeOf(p,'airport',cell);if(ap)return ap;
+ var x=cell%GW,y=(cell/GW)|0,R=40*K*p.mod.rng;
+ for(var i=0;i<ships.length;i++){var s=ships[i];if(s.o===p.id&&s.t==='carrier'&&dist2(x,y,s.x,s.y)<=R*R)return {x:s.x-.5,y:s.y-.5}}
+ return null;
+}
+var MODK={atk:1,def:1,gold:1,grow:1,maxT:1,rec:1,loot:1,terr:1,build:1,rng:1,sam:0,samR:1,dres:1,wres:1,rp:1,nuke:0,nukeR:1,missR:1,bombR:1,wcost:1,bombC:1,spd:1};
+var SKC=[30,50,80,120,180];
+var BR=[
+ {id:'mil',ico:'⚔️',n:'Militar',lv:[
+  [{id:'mil1',n:'Instrucción básica',d:'Conquistar cuesta −8% de tropas por celda.',m:{atk:.92}}],
+  [{id:'mil2a',n:'Blitzkrieg',d:'Conquista −12% de coste y +25% de velocidad de avance.',m:{atk:.88,spd:1.25}},
+   {id:'mil2b',n:'Guerra de guerrillas',d:'Los enemigos pagan +20% por invadirte.',m:{def:1.2}}],
+  [{id:'mil3',n:'Reservistas',d:'+15% de tropas máximas.',m:{maxT:1.15}}],
+  [{id:'mil4a',n:'Botín de guerra',d:'Al conquistar recuperas el doble de tropas.',m:{loot:2}},
+   {id:'mil4b',n:'Moral alta',d:'+15% de generación de tropas.',m:{grow:1.15}}],
+  [{id:'mil5',n:'Dominio total',d:'Conquista −15% de coste y +30% de velocidad.',m:{atk:.85,spd:1.3}}]]},
+ {id:'eco',ico:'💰',n:'Economía',lv:[
+  [{id:'eco1',n:'Impuestos',d:'+15% de oro.',m:{gold:1.15}}],
+  [{id:'eco2a',n:'Comercio exterior',d:'+15% de oro.',m:{gold:1.15}},
+   {id:'eco2b',n:'Austeridad',d:'Construir cuesta −15%.',m:{build:.85}}],
+  [{id:'eco3',n:'Reclutamiento masivo',d:'Reclutar cuesta −30% de oro.',m:{rec:.7}}],
+  [{id:'eco4a',n:'Industria pesada',d:'+20% de oro.',m:{gold:1.2}},
+   {id:'eco4b',n:'Ejército profesional',d:'Reclutar −40% de oro y +5% de tropas/s.',m:{rec:.6,grow:1.05}}],
+  [{id:'eco5',n:'Potencia económica',d:'+25% de oro y construir −10%.',m:{gold:1.25,build:.9}}]]},
+ {id:'def',ico:'🛡️',n:'Defensa',lv:[
+  [{id:'def1',n:'Fortificaciones',d:'Los enemigos pagan +15% por invadirte.',m:{def:1.15}}],
+  [{id:'def2a',n:'Radar avanzado',d:'+15% de probabilidad de intercepción de los SAM.',m:{sam:.15}},
+   {id:'def2b',n:'Resistencia sísmica',d:'Sufres −40% de daño por desastres naturales.',m:{dres:.6}}],
+  [{id:'def3',n:'Defensa en profundidad',d:'Los enemigos pagan +15% por invadirte.',m:{def:1.15}}],
+  [{id:'def4a',n:'Escudo antimisiles',d:'SAM: +15% de intercepción y +30% de radio.',m:{sam:.15,samR:1.3}},
+   {id:'def4b',n:'Refugios subterráneos',d:'Pierdes −40% de tropas por misiles, bombas y nucleares.',m:{wres:.6}}],
+  [{id:'def5',n:'Fortaleza',d:'Enemigos pagan +20% por invadirte y +10% de tropas/s.',m:{def:1.2,grow:1.1}}]]},
+ {id:'tec',ico:'🚀',n:'Tecnología',lv:[
+  [{id:'tec1',n:'Cartografía',d:'Los terrenos difíciles frenan un 25% menos.',m:{terr:.75}}],
+  [{id:'tec2a',n:'Alpinismo',d:'Los terrenos difíciles frenan otro 25% menos.',m:{terr:.75}},
+   {id:'tec2b',n:'Logística',d:'+25% de alcance de silos, puertos y aeródromos.',m:{rng:1.25}}],
+  [{id:'tec3',n:'Física nuclear',d:'Desbloquea las armas nucleares ☢️.',m:{nuke:1}}],
+  [{id:'tec4a',n:'Cabezas mejoradas',d:'Nuclear +30% de radio; misiles +50% de radio.',m:{nukeR:1.3,missR:1.5}},
+   {id:'tec4b',n:'Producción en masa',d:'Buques, misiles y nucleares cuestan −30%.',m:{wcost:.7}}],
+  [{id:'tec5',n:'Era espacial',d:'+50% de investigación, +20% de alcance, bombas +30% de radio.',m:{rp:1.5,rng:1.2,bombR:1.3}}]]}
+];
+var SKM={};BR.forEach(function(b){b.lv.forEach(function(l,li){l.forEach(function(s){s.br=b.id;s.l=li;SKM[s.id]=s})})});
+var DOC={
+ none:{n:'Equilibrado',d:'Sin bonos ni penalizaciones.',m:{}},
+ land:{n:'Imperio terrestre',d:'Conquista −10% de coste, +10% de tropas máx., botín +50%.',m:{atk:.9,maxT:1.1,loot:1.5}},
+ sea:{n:'Potencia naval',d:'+30% de alcance de puertos/silos/aeródromos, armas y buques −20%, +5% de oro.',m:{rng:1.3,wcost:.8,gold:1.05}},
+ air:{n:'Superpotencia aérea',d:'Bombardeos a mitad de precio con +30% de radio, +10% de intercepción SAM, +15% de alcance.',m:{bombC:.5,bombR:1.3,sam:.1,rng:1.15}},
+ tech:{n:'Tecnocracia',d:'+60% de investigación, +5% de oro y 40 puntos de investigación iniciales.',m:{rp:1.6,gold:1.05},rp0:40},
+ eco:{n:'Mercantil',d:'+20% de oro, reclutar −20%, construir −10%.',m:{gold:1.2,rec:.8,build:.9}}
+};
+var RES=[
+ ['oil','Golfo Pérsico',50,27],['oil','Texas',-98,31],['oil','Venezuela',-66,9],['oil','Siberia Occidental',72,62],['oil','Nigeria',6,5],['oil','Libia',18,29],['oil','Mar del Norte',3,57],['oil','Alaska',-150,70],['oil','Alberta',-112,56],['oil','Golfo de México',-93,19],['oil','Angola',13,-8],['oil','Argelia',5,31],['oil','Mar Caspio',51,44],['oil','Brasil (presal)',-42,-22],['oil','Irak',44,31],
+ ['min','Cobre de Chile',-70,-24],['min','Witwatersrand',27,-27],['min','Pilbara',118,-22],['min','Katanga',26,-10],['min','Carajás',-51,-6],['min','Sudbury',-81,47],['min','Urales',60,57],['min','Baotou',110,41],['min','Donbás',37,48],['min','Jharkhand',85,23],['min','Andes peruanos',-75,-12],['min','Kalgoorlie',121,-31],['min','Kiruna',20,68],
+ ['farm','Pampa',-61,-34],['farm','Medio Oeste',-95,41],['farm','Tierras negras de Ucrania',32,49],['farm','Valle del Nilo',31,28],['farm','Llanura del Ganges',82,26],['farm','Llanura del norte de China',115,35],['farm','Delta del Mekong',105,11],['farm','Cuenca de París',2,49],['farm','Punyab',74,31],['farm','Sur de Brasil',-52,-24],['farm','Praderas canadienses',-105,52],['farm','Murray-Darling',145,-34],['farm','Java',110,-7.5]
+];
+var RESI={oil:'🛢️',min:'⛏️',farm:'🌾'};
+var RESN={oil:'Yacimiento de petróleo',min:'Yacimiento de minerales',farm:'Tierras fértiles'};
+var RESD={oil:'+9 oro/s para su dueño',min:'+4 oro/s y +1,2 puntos de investigación/s',farm:'+700 tropas máx. y +2,5 tropas/s'};
+var RLIST=[];
+function setupResources(){
+ RLIST=[];
+ RES.forEach(function(r){
+  if(llCell(r[2],r[3])<0)return;
+  var c=snapLand(r[2],r[3]);if(c<0)return;
+  RLIST.push({t:r[0],name:r[1],cell:c,x:c%GW,y:(c/GW)|0,o:-9});
+ });
+}
+var ACH=[
+ ['first','🗡️','Primera conquista','Conquista una celda de otro país.'],
+ ['win','🏆','Conquistador','Gana una partida.'],
+ ['hard','💪','Contra viento y marea','Gana en dificultad Difícil.'],
+ ['fast','⚡','Guerra relámpago','Gana en menos de 20 minutos.'],
+ ['extreme','🌋','Superviviente','Gana con relieve y desastres en modo Extremo.'],
+ ['nuke','☢️','Apocalipsis','Lanza una bomba nuclear.'],
+ ['naval','🚢','Lobo de mar','Realiza una invasión naval.'],
+ ['air','✈️','As del aire','Bombardea un objetivo.'],
+ ['ally','🤝','Diplomático','Forma una alianza.'],
+ ['traitor','🗡️','Traidor','Rompe una alianza o una tregua.'],
+ ['sage','🌳','Sabio','Investiga 10 habilidades en una partida.'],
+ ['physics','⚛️','Física nuclear','Investiga la Física nuclear.'],
+ ['oil','🛢️','Barón del petróleo','Controla 3 yacimientos de petróleo a la vez.'],
+ ['elim','💀','Exterminador','Elimina a 3 países en una partida.'],
+ ['rich','💰','Magnate','Acumula 20.000 de oro.'],
+ ['mount','⛰️','Alpinista','Conquista 60 celdas de alta montaña.'],
+ ['witness','🌍','Testigo de la naturaleza','Presencia 10 desastres naturales en una partida.'],
+ ['block','🔒','Bloqueo naval','Bloquea un puerto enemigo con un buque.'],
+ ['daily','📅','Desafío cumplido','Gana un desafío diario.'],
+ ['cold','❄️','Guerra Fría','Gana el escenario Guerra Fría.']
+];
+var RANKS=['Recluta','Cabo','Sargento','Subteniente','Teniente','Capitán','Mayor','Coronel','General','Mariscal'];
+var SV={ach:{},games:0,wins:0,eco:0,big:0,mute:0,daily:{}};
+try{var rawSv=localStorage.getItem('pn_save');if(rawSv){var o2=JSON.parse(rawSv);for(var kk in o2)SV[kk]=o2[kk]}}catch(e){}
+function saveSv(){try{localStorage.setItem('pn_save',JSON.stringify(SV))}catch(e){}}
+function achCount(){var n=0;for(var k in SV.ach)n++;return n}
+function rankIdx(){return Math.min(9,Math.floor(achCount()/2))}
+var ST={elim:0,mount:0,dis:0,sk:0};
+function ach(id){
+ if(SV.ach[id])return;
+ SV.ach[id]=1;saveSv();
+ for(var i=0;i<ACH.length;i++)if(ACH[i][0]===id){toast('🏆 Logro: '+ACH[i][2]+' — '+ACH[i][3],3600);break}
+ snd('ach');
+}
+/* ---- sonido ---- */
+var AC=null,MUTE=!!SV.mute,ECO=!!SV.eco;
+function audio(){
+ if(AC)return AC;
+ try{var C=window.AudioContext||window.webkitAudioContext;if(C)AC=new C()}catch(e){}
+ return AC;
+}
+function tone(f,d,type,vol,when,slide){
+ if(MUTE)return;var a=audio();if(!a)return;
+ try{
+  var t=a.currentTime+(when||0),o=a.createOscillator(),g=a.createGain();
+  o.type=type||'sine';o.frequency.setValueAtTime(f,t);
+  if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+d);
+  g.gain.setValueAtTime(vol||.1,t);g.gain.exponentialRampToValueAtTime(.001,t+d);
+  o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02);
+ }catch(e){}
+}
+var noiseBuf=null;
+function noise(d,vol,freq){
+ if(MUTE)return;var a=audio();if(!a)return;
+ try{
+  if(!noiseBuf){noiseBuf=a.createBuffer(1,a.sampleRate,a.sampleRate);var dd=noiseBuf.getChannelData(0);for(var i=0;i<dd.length;i++)dd[i]=Math.random()*2-1}
+  var s=a.createBufferSource(),g=a.createGain(),f=a.createBiquadFilter(),t=a.currentTime;
+  s.buffer=noiseBuf;s.loop=true;f.type='lowpass';f.frequency.value=freq||600;
+  g.gain.setValueAtTime(vol||.2,t);g.gain.exponentialRampToValueAtTime(.001,t+d);
+  s.connect(f);f.connect(g);g.connect(a.destination);s.start(t);s.stop(t+d+.02);
+ }catch(e){}
+}
+function snd(k){
+ if(MUTE)return;
+ switch(k){
+  case 'ui':tone(660,.05,'square',.04);break;
+  case 'build':tone(300,.07,'square',.07);tone(450,.09,'square',.07,.07);break;
+  case 'alert':tone(880,.18,'square',.07);tone(660,.18,'square',.07,.2);tone(880,.18,'square',.07,.4);break;
+  case 'boom':noise(.7,.35,500);tone(90,.5,'sawtooth',.12,0,40);break;
+  case 'small':noise(.25,.18,900);break;
+  case 'quake':noise(1.2,.3,160);tone(55,1,'sine',.15,0,35);break;
+  case 'wave':noise(1.1,.15,1400);break;
+  case 'ally':tone(523,.12,'sine',.1);tone(659,.12,'sine',.1,.12);tone(784,.2,'sine',.1,.24);break;
+  case 'ach':tone(784,.1,'triangle',.1);tone(988,.1,'triangle',.1,.1);tone(1319,.25,'triangle',.1,.2);break;
+  case 'win':tone(523,.15,'triangle',.12);tone(659,.15,'triangle',.12,.15);tone(784,.15,'triangle',.12,.3);tone(1047,.4,'triangle',.12,.45);break;
+  case 'lose':tone(392,.25,'sawtooth',.1);tone(330,.25,'sawtooth',.1,.25);tone(262,.6,'sawtooth',.1,.5);break;
+  case 'research':tone(740,.08,'sine',.08);tone(1109,.14,'sine',.08,.08);break;
+  case 'event':tone(600,.1,'sine',.08);tone(450,.14,'sine',.08,.1);break;
+ }
+}
+/* ---- mods ---- */
+function calcMods(p){
+ var m={},k,i;
+ for(k in MODK)m[k]=MODK[k];
+ function ap(o){if(!o)return;for(var q in o){if(q==='sam'||q==='nuke')m[q]+=o[q];else m[q]*=o[q]}}
+ ap(DOC[p.doc||'none'].m);
+ for(i=0;i<p.sk.length;i++)ap(SKM[p.sk[i]].m);
+ if(SC.nuke)m.nuke=1;
+ p.mod=m;
+}
+function hasSk(p,id){return p.sk.indexOf(id)>=0}
+function skState(p,s){
+ if(hasSk(p,s.id))return 'own';
+ var lv=BR.filter(function(b){return b.id===s.br})[0].lv,i;
+ for(i=0;i<lv[s.l].length;i++)if(lv[s.l][i]!==s&&hasSk(p,lv[s.l][i].id))return 'bl';
+ if(s.l>0){var ok=false;for(i=0;i<lv[s.l-1].length;i++)if(hasSk(p,lv[s.l-1][i].id))ok=true;if(!ok)return 'lk'}
+ return p.rp>=SKC[s.l]?'av':'poor';
+}
+function buySkill(p,id){
+ var s=SKM[id];if(!s)return false;
+ var st=skState(p,s);if(st!=='av')return false;
+ p.rp-=SKC[s.l];p.sk.push(id);calcMods(p);recalc(p);
+ if(p===me){ST.sk++;if(ST.sk>=10)ach('sage');if(id==='tec3')ach('physics');snd('research');toast('🌳 Investigado: '+s.n)}
+ return true;
+}
+function anySkillBuyable(){
+ for(var id in SKM)if(skState(me,SKM[id])==='av')return true;
+ return false;
+}
+/* ---- diplomacia ---- */
+function allied(a,b){return !!a.al[b.id]}
+function truce(a,b){return (a.tru[b.id]||0)>gt}
+function atWar(a,b){return a===b?false:(!allied(a,b)&&!truce(a,b))}
+function countAllies(p){var n=0;for(var id in p.al)if(P[+id]&&P[+id].alive)n++;return n}
+function setAlly(a,b,v){if(v){a.al[b.id]=1;b.al[a.id]=1;delete a.tru[b.id];delete b.tru[a.id]}else{delete a.al[b.id];delete b.al[a.id]}}
+function setTruce(a,b,until){a.tru[b.id]=until;b.tru[a.id]=until}
+function cancelAttacks(a,b){
+ for(var i=a.attacks.length-1;i>=0;i--)if(a.attacks[i].t===b.id){a.troops+=Math.max(0,a.attacks[i].troops);a.attacks.splice(i,1)}
+}
+function biggest(ex1,ex2){
+ var L=null;
+ for(var i=0;i<P.length;i++){var q=P[i];if(!q.alive||!q.spawned||q===ex1||q===ex2)continue;if(!L||q.cells>L.cells)L=q}
+ return L;
+}
+function botAnswer(b,kind){
+ if(me.traitor>gt)return {ok:false,msg:'no confía en ti: traicionaste un pacto'};
+ if(b.dipCd>gt)return {ok:false,msg:'no quiere hablar ahora'};
+ var L=biggest(me,b),fear=L&&L.cells>1.25*b.cells&&L.cells>me.cells*.9;
+ var ratio=me.cells/Math.max(1,b.cells),pr;
+ if(kind==='truce')pr=.35+(ratio>.7?.3:0)+(fear?.2:0)-(b.cells>1.8*me.cells?.3:0);
+ else pr=.12+(fear?.4:0)+(ratio>.6?.15:0)-(b.cells>1.8*me.cells?.15:0);
+ if(Math.random()<pr)return {ok:true};
+ return {ok:false,msg:ratio<.5?'te considera demasiado débil':fear?'no te necesita ahora':'prefiere la guerra'};
+}
+function makeDeal(b,kind){
+ if(kind==='ally'){setAlly(me,b,true);toast('🤝 '+b.name+' acepta la alianza. Sois aliados.');snd('ally');ach('ally')}
+ else{setTruce(me,b,gt+180000);toast('🕊️ '+b.name+' acepta una tregua de 3 minutos.');snd('ally')}
+ cancelAttacks(me,b);cancelAttacks(b,me);recalc(me);
+}
+function proposeTo(b,kind){
+ if(!b.alive||allied(me,b))return;
+ if(kind==='truce'&&truce(me,b))return;
+ if(kind==='ally'&&countAllies(me)>=3){toast('Puedes tener como máximo 3 aliados.');return}
+ var r=botAnswer(b,kind);
+ if(r.ok)makeDeal(b,kind);
+ else{b.dipCd=gt+25000;toast('✋ '+b.name+' rechaza: '+r.msg+'.',3000)}
+}
+function breakDeal(b){
+ if(allied(me,b)){
+  setAlly(me,b,false);me.traitor=gt+300000;me.troops*=.92;
+  toast('💔 Rompiste la alianza con '+b.name+'. Los demás desconfiarán 5 min.',3500);ach('traitor');
+ }else if(truce(me,b)){
+  delete me.tru[b.id];delete b.tru[me.id];me.traitor=gt+180000;me.troops*=.96;
+  toast('⚔️ Rompiste la tregua con '+b.name+'. Los demás desconfiarán 3 min.',3500);ach('traitor');
+ }
+ recalc(me);
+}
+var propB=null,nextProp=0;
+function showProp(){
+ var d=$('prop');
+ if(!propB){d.style.display='none';return}
+ d.innerHTML='<div style="margin-bottom:6px">'+(propB.kind==='ally'?'🤝 <b>'+propB.b.name+'</b> te propone una <b>alianza</b>':'🕊️ <b>'+propB.b.name+'</b> te propone una <b>tregua de 3 min</b>')+'</div><button class="pri" id="pYes">Aceptar</button> <button id="pNo">Rechazar</button>';
+ d.style.display='block';
+}
+function dipThink(){
+ var i,a,b,id;
+ for(i=0;i<P.length;i++){
+  a=P[i];
+  for(id in a.tru){
+   if(a.tru[id]<=gt){
+    b=P[+id];delete a.tru[id];if(b)delete b.tru[a.id];
+    if(a===me&&b)toast('La tregua con '+b.name+' terminó.');
+   }
+  }
+ }
+ if(propB&&gt>propB.until){propB=null;showProp()}
+ var leader=biggest(null,null),bots=P.filter(function(q){return q.bot&&q.alive&&q.spawned});
+ // alianzas entre bots
+ if(bots.length>3&&Math.random()<.3){
+  a=bots[(Math.random()*bots.length)|0];b=bots[(Math.random()*bots.length)|0];
+  if(a!==b&&leader&&leader!==a&&leader!==b&&!allied(a,b)&&countAllies(a)<2&&countAllies(b)<2&&leader.cells>1.15*Math.max(a.cells,b.cells)){
+   setAlly(a,b,true);cancelAttacks(a,b);cancelAttacks(b,a);
+   toast('🤝 '+a.name+' y '+b.name+' firman una alianza.',2600);
+  }
+ }
+ // traiciones
+ for(i=0;i<bots.length;i++){
+  a=bots[i];
+  for(id in a.al){
+   b=P[+id];if(!b||!b.alive)continue;
+   if(b===me){
+    if(a.cells>1.4*me.cells&&Math.random()<.02){
+     setAlly(a,me,false);toast('💔 '+a.name+' rompió la alianza contigo. ¡Estáis en guerra!',3600);snd('alert');recalc(me);
+    }
+   }else if(a.id<b.id&&a.cells>1.6*b.cells&&Math.random()<.04){
+    setAlly(a,b,false);toast('💔 '+a.name+' traiciona a '+b.name+'.',2600);
+   }
+  }
+ }
+ // propuestas a ti
+ if(me&&me.spawned&&gt>=nextProp&&!propB&&me.traitor<=gt&&!ended){
+  nextProp=gt+70000+Math.random()*50000;
+  var cand=bots.filter(function(q){return !allied(me,q)&&!truce(me,q)});
+  if(cand.length){
+   b=cand[(Math.random()*cand.length)|0];
+   var fear=leader&&leader!==b&&leader!==me&&leader.cells>1.25*b.cells;
+   if(fear&&countAllies(me)<3)propB={b:b,kind:'ally',until:gt+20000};
+   else propB={b:b,kind:'truce',until:gt+20000};
+   showProp();snd('event');
+  }
+ }
+}
+/* ---- recursos y eventos ---- */
+function resTick(){
+  for(var i=0;i<RLIST.length;i++){
+  var n=RLIST[i],o=own[n.cell];
+  if(o===n.o)continue;
+  var prev=n.o;n.o=o;
+  if(o===me.id)toast(RESI[n.t]+' Controlas: '+n.name+' ('+RESD[n.t]+')',3000);
+  else if(prev===me.id&&o>=-1)toast(RESI[n.t]+' Perdiste '+n.name,2600);
+  if(o>=0&&P[o].spawned)recalc(P[o]);
+  if(prev>=0&&P[prev]&&P[prev].spawned)recalc(P[prev]);
+  if(o===me.id&&n.t==='oil'){var c=0;for(var j=0;j<RLIST.length;j++)if(RLIST[j].t==='oil'&&own[RLIST[j].cell]===me.id)c++;if(c>=3)ach('oil')}
+ }
+}
+var nextEv=0;
+function scheduleEvent(first){nextEv=gt+(first?90000:55000+Math.random()*55000)/(DIS===2?1.8:1)/(SC.evMul||1)}
+function alivePl(){return P.filter(function(q){return q.alive&&q.spawned})}
+function doEvent(){
+ var al=alivePl();if(al.length<3)return;
+ var r=Math.random(),lead=biggest(null,null),weak=al[0],i,q;
+ for(i=0;i<al.length;i++)if(al[i].cells<weak.cells)weak=al[i];
+ var rnd=al[(Math.random()*al.length)|0];
+ if(r<.17){
+  q=lead;q.troops*=.8;q.gold*=.85;
+  var cells=[];for(i=0;i<q.rc.length&&i<q.rn;i++)if(own[q.rc[i]]===q.id)cells.push(q.rc[i]);
+  if(cells.length){
+   var c=cells[(Math.random()*cells.length)|0],cx=c%GW,cy=(c/GW)|0,R=Math.ceil(4*K);
+   for(var yy=cy-R;yy<=cy+R;yy++)for(var xx=cx-R;xx<=cx+R;xx++){
+    if(xx<0||yy<0||xx>=GW||yy>=GH||dist2(xx,yy,cx,cy)>R*R)continue;
+    var ii=yy*GW+xx;if(own[ii]===q.id&&Math.random()<.7)setOwner(ii,-1);
+   }
+  }
+  toast('✊ ¡Revuelta popular en '+q.name+'! Pierde territorio, tropas y oro.',3800);
+  if(q.cells===0)eliminate(q,null);
+ }else if(r<.32){
+  for(i=0;i<al.length;i++)al[i].troops*=.93;
+  toast('☣️ Epidemia mundial: todos pierden un 7% de sus tropas.',3600);
+ }else if(r<.46){
+  q=Math.random()<.5?me:rnd;var g=Math.round((250*Math.sqrt(E)+q.income*25));q.gold+=g;
+  toast('🛢️ ¡'+q.name+' descubre nuevas reservas! +'+fmt(g)+' de oro.',3400);
+ }else if(r<.58){
+  for(i=0;i<al.length;i++)al[i].troops+=Math.max(0,al[i].maxT-al[i].troops)*.08;
+  toast('🌾 Cosecha récord: todos reclutan más tropas.',3400);
+ }else if(r<.70){
+  for(i=0;i<al.length;i++)al[i].gold*=.85;
+  toast('📉 Crisis económica mundial: todos pierden un 15% del oro.',3600);
+ }else if(r<.84){
+  q=weak;q.troops+=q.maxT*.25;
+  toast('⚔️ '+q.name+' recibe mercenarios y refuerzos.',3400);
+ }else{
+  var rp=Math.round(35*(1+rankIdx()*.1));me.rp+=rp;
+  toast('🎓 ¡Avance científico! +'+rp+' puntos de investigación.',3400);
+ }
+ snd('event');
+}
+function eventTick(){
+ if(DIS===0||SC.noEv||!nextEv)return;
+ if(gt>=nextEv){doEvent();scheduleEvent(false)}
+}
+/* ---- escenarios ---- */
+var GMODE='normal',DOCSEL='none',SC={},DR=null;
+function applyMode(key){
+ SC={nuke:false,troops:1,boost:{},names:null,evMul:1,noEv:false,label:''};DR=null;
+ if(GMODE==='daily'){
+  var d=new Date(),seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  DR=rng(seed);
+  var keys=['world','sa','na','eu','af','as','oc'],docs=['none','land','sea','air','tech','eco'];
+  key=keys[(DR()*keys.length)|0];DIS=1+((DR()*2)|0);DIFF=[.8,1.1][(DR()*2)|0];DOCSEL=docs[(DR()*docs.length)|0];
+  var h=(DR()*3)|0;SC.troops=[.6,1,1][h];SC.label='📅 Desafío diario '+seed;SC.daily=seed;
+ }else if(GMODE==='cold'){
+  key='world';DIS=0;SC.nuke=true;SC.cold=true;SC.label='❄️ Guerra Fría';
+  SC.names=['Estados Unidos','Rusia','China','Reino Unido','Francia','India','Alemania','Brasil','Cuba','Japón','Italia','España','Turquía','Egipto','Irán','Corea','Canadá','México','Australia','Sudáfrica','Polonia','Ucrania','Pakistán','Arabia Saudita'];
+  SC.boost={'Estados Unidos':2.2,'Rusia':2.2,'China':1.8};
+ }else if(GMODE==='fire'){
+  DIS=2;SC.evMul=2;SC.label='🔥 Mundo en llamas';
+ }
+ return key;
+}
+function eventLabel(){return SC.label||''}
+
+/* =============== TICK =============== */
+function tick(){
+ gt+=100;
+ var i,p;
+ for(i=0;i<P.length;i++){
+  p=P[i];
+  if(!p.alive||!p.spawned)continue;
+  if((gt/100+i)%10===0)recalc(p);
+  p.troops+=p.growth*.1;if(p.troops<0)p.troops=0;
+  p.gold+=p.income*.1;
+  processAttacks(p);
+  if(p.bot&&gt>=p.nextAI){p.nextAI=gt+(4000+Math.random()*5000)/DIFF;aiThink(p)}
+  if(p.cells===0&&p.attacks.length===0&&gt-p.born>3000)eliminate(p,null);
+ }
+ for(i=flights.length-1;i>=0;i--){
+  var f=flights[i];
+  if(gt-f.t0>=f.dur){flights.splice(i,1);impact(f)}
+ }
+ shipsTick();
+ disasterTick();
+ eventTick();
+ if(me&&me.spawned&&me.alive)me.rp+=me.rpRate*.1;
+ if(gt%1000===0)resTick();
+ if(gt%5000===0)dipThink();
+ if(me&&me.gold>=20000)ach('rich');
+ for(i=fx.length-1;i>=0;i--)if(gt-fx[i].t0>fx[i].dur)fx.splice(i,1);
+ if((gt/100|0)%10===0)checkWin();
+}
+function checkWin(){
+ for(var i=0;i<P.length;i++){
+  var p=P[i];if(!p.alive)continue;
+  var tot=p.cells;
+  for(var id in p.al){var q=P[+id];if(q&&q.alive)tot+=q.cells}
+  if(tot/LAND_TOTAL>=WIN){
+   var meIn=p===me||!!p.al[me.id];
+   endGame(meIn,p,meIn&&p!==me||(p===me&&tot!==p.cells));
+   return;
+  }
+ }
+}
+var ended=false;
+function endGame(win,p,shared){
+ if(ended)return;ended=true;state='over';
+ var secs=Math.round(gt/1000),tm=Math.floor(secs/60)+':'+('0'+(secs%60)).slice(-2);
+ SV.games++;
+ if(win){
+  SV.wins++;ach('win');
+  if(DIFF>=1.1)ach('hard');
+  if(gt<1200000)ach('fast');
+  if(DIS===2)ach('extreme');
+  if(SC.daily){if(!SV.daily[SC.daily]||secs<SV.daily[SC.daily])SV.daily[SC.daily]=secs;ach('daily')}
+  if(SC.cold)ach('cold');
+ }
+ saveSv();
+ $('rankTxt').textContent='Rango: '+RANKS[rankIdx()]+' · '+achCount()+'/'+ACH.length+' logros';
+ $('endT').innerHTML=win?'🏆 <span style="color:#9be58f">'+(shared?'VICTORIA COMPARTIDA':'VICTORIA')+'</span>':'💀 <span style="color:#e8503a">DERROTA</span>';
+ $('endD').textContent=(win?(shared?'Tu alianza controla el '+Math.round(100*(me.cells+Object.keys(me.al).reduce(function(a,id){return a+(P[+id].alive?P[+id].cells:0)},0))/LAND_TOTAL)+'% del mapa.':'Controlas el '+Math.round(100*me.cells/LAND_TOTAL)+'% del mapa. ¡El mundo es tuyo!'):(p?p.name+' controla el mapa.':'Fuiste eliminado.'))+' Tiempo: '+tm+'.';
+ $('endE').textContent=win?'🏆':'💀';
+ $('end').style.display='flex';
+ snd(win?'win':'lose');
+}
+
+/* =============== INICIO =============== */
+function startGame(name,key){
+ var i,k;
+ key=applyMode(key);
+ loadMap(key);
+ var M=MAPS[key];
+ P=[];flights=[];ships=[];fx=[];dpend=[];storms=[];ST={elim:0,mount:0,dis:0,sk:0};propB=null;showProp();nextEv=0;selS=null;nextProp=60000;$('tree').style.display='none';$('dip').style.display='none';gt=0;acc=0;ended=false;placing=null;selB=null;mode='terr';paused=false;
+ $('bPause').textContent='⏸';$('paused').style.display='none';
+ me=newPlayer(0,name||'Jugador',[232,80,58],false);
+ me.doc=DOCSEL;me.rp=10*rankIdx()+(DOC[DOCSEL].rp0||0);calcMods(me);
+ P.push(me);
+ var pool=SEEDS.filter(function(sd){
+  if(sd[0].toLowerCase()===me.name.toLowerCase())return false;
+  if(SC.names&&SC.names.indexOf(sd[0])<0)return false;
+  if(sd[1]<M.lon0||sd[1]>M.lon1||sd[2]>M.lat0||sd[2]<M.lat1)return false;
+  return snapLand(sd[1],sd[2])>=0;
+ });
+ var rr=DR||Math.random;
+ for(i=pool.length-1;i>0;i--){var j=(rr()*(i+1))|0,t=pool[i];pool[i]=pool[j];pool[j]=t}
+ var nb=Math.min(M.bots,pool.length);
+ for(i=0;i<nb;i++){
+  var col=hsl((i*137.5+30)%360,.55+(i%3)*.08,.5);
+  var b=newPlayer(P.length,pool[i][0],col,true);
+  b.seedCell=snapLand(pool[i][1],pool[i][2]);
+  P.push(b);
+ }
+ for(i=0;i<N;i++)paint(i);
+ dirty=true;
+ state='spawn';
+ setMode('terr');closeInfo();
+ $('menu').style.display='none';$('end').style.display='none';
+ document.body.className='';
+ resize();
+ cam.s=cam.minS*1.2;cam.x=GW/2;cam.y=GH/2;
+ toast((SC.label?SC.label+' · ':'')+'Toca la tierra donde quieres empezar',3200);
+ refreshBar();
+}
+function spawnPlayer(p,cell,r){
+ var x0=cell%GW,y0=(cell/GW)|0;
+ for(var yy=y0-r;yy<=y0+r;yy++)for(var xx=x0-r;xx<=x0+r;xx++){
+  if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+  if(dist2(xx,yy,x0,y0)>r*r+1)continue;
+  var i=yy*GW+xx;
+  if(own[i]===-1)setOwner(i,p.id);
+ }
+ p.spawned=true;p.troops=1500*(p===me?SC.troops:(SC.boost[p.name]||1));p.gold=p.bot?300+Math.random()*400:700;p.born=gt;p.nextAI=gt+3000+Math.random()*4000;
+ recalc(p);
+}
+
+/* =============== INTERFAZ =============== */
+function $(id){return document.getElementById(id)}
+function fmt(n){
+ n=Math.floor(n);
+ if(n>=1e6)return (n/1e6).toFixed(1)+'M';
+ if(n>=1e4)return (n/1e3).toFixed(1)+'K';
+ if(n>=1e3)return (n/1e3).toFixed(2)+'K';
+ return ''+n;
+}
+var toastT=0;
+function toast(s,ms){
+ var t=$('toast');t.textContent=s;t.style.display='block';
+ clearTimeout(toastT);toastT=setTimeout(function(){t.style.display='none'},ms||2200);
+}
+function legend(){
+ if(DIS===0)return '<div class="s" style="font-size:10px">Mapa liso: sin relieve ni desastres.</div>';
+ return '<div class="s" style="font-size:10px">Terreno (coste de conquista): 🌴 selva ×'+TMUL(1).toFixed(1)+' · 🏜️ desierto ×'+TMUL(2).toFixed(1)+' · ❄️ hielo ×'+TMUL(3).toFixed(1)+' · ⛰️ montaña ×'+TMUL(4).toFixed(1)+' · 🏔️ alta montaña ×'+TMUL(5).toFixed(1)+' · 🌋 ceniza ×'+TMUL(6).toFixed(1)+' · ríos ×'+TMUL(7).toFixed(1)+'<br>Recursos: 🛢️ petróleo · ⛏️ minerales · 🌾 tierras fértiles (controla su celda central)<br>Desastres: 🌋 erupciones · 🌍 terremotos · 🌊 tsunamis · 🌀 huracanes (con aviso previo)</div>';
+}
+function setMode(m){
+ mode=m;
+ var bs=document.querySelectorAll('#modes button');
+ for(var i=0;i<bs.length;i++)bs[i].className=bs[i].getAttribute('data-m')===m?'on':'';
+ placing=null;selB=null;
+ showInfo('<div class="d">'+MODES[m]+'</div>'+legend());
+ refreshBar();
+}
+function showInfo(h){var e=$('info');e.innerHTML=h;e.style.display='block';infoOpen=true}
+function closeInfo(){$('info').style.display='none';infoOpen=false}
+function refreshBar(){
+ if(!me)return;
+ var h='';
+ for(var i=0;i<ITEMS.length;i++){
+  var it=ITEMS[i],c=costOf(it,me,null),ok=me.gold>=c;
+  h+='<button class="it'+(placing&&placing.id===it.id?' on':'')+'" data-id="'+it.id+'"'+(ok?'':' style="opacity:.55"')+'><span class="i">'+it.ico+'</span>'+it.name+'<br><span class="c">'+fmt(c)+'</span></button>';
+ }
+ $('bar').innerHTML=h;
+}
+function validate(it,cell){
+ if(cell==null)return 'Toca el mapa para elegir el punto.';
+ var c=costOf(it,me,cell);
+ var x=cell%GW,y=(cell/GW)|0;
+ if(it.k==='b'){
+  if(own[cell]!==me.id)return 'Debe estar dentro de tu territorio.';
+  if(bAt[cell])return 'Ya hay un edificio aquí.';
+  var mg=Math.max(1,Math.round(K*.8));
+  for(var yy=y-mg;yy<=y+mg;yy++)for(var xx=x-mg;xx<=x+mg;xx++){
+   if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+   if(bAt[yy*GW+xx])return 'Demasiado cerca de otro edificio.';
+  }
+  if(it.coast&&!isCoast[cell])return 'El puerto debe estar en la costa.';
+ }else if(it.id==='ship'||it.id==='carrier'){
+  if(own[cell]!==-2)return 'Debe colocarse en el mar.';
+  var pt=nearestB(me,'port',cell,true);
+  if(!pt)return 'Debe estar dentro del radio de uno de tus puertos.';
+  if(it.id==='ship'&&ships.filter(function(s){return s.o===me.id&&s.t==='ship'}).length>=10)return 'Máximo 10 buques.';
+  if(it.id==='carrier'&&ships.filter(function(s){return s.o===me.id&&s.t==='carrier'}).length>=3)return 'Máximo 3 portaaviones.';
+ }else{
+  if(own[cell]<0&&own[cell]!==-1)return 'Apunta a tierra.';
+  if(own[cell]===me.id)return 'No puedes atacar tu propio territorio.';
+  if(it.id==='nuke'&&!me.mod.nuke)return '🌳 Investiga «Física nuclear» para desbloquear las armas nucleares.';
+  if(own[cell]>=0&&!atWar(me,P[own[cell]]))return 'Tienes un tratado con ese país.';
+  if(!hasB(me,'silo'))return 'Necesitas un Silo de misiles.';
+  if(!inRangeOf(me,'silo',cell))return 'Fuera del alcance de tus silos.';
+ }
+ if(me.gold<c)return 'Oro insuficiente (necesitas '+fmt(c)+').';
+ return '';
+}
+function refreshPlacing(){
+ if(!placing)return;
+ var it=IT[placing.id],cell=placing.cell,c=costOf(it,me,cell),err=validate(it,cell);
+ var verb=it.k==='b'?'construir':(it.id==='ship'||it.id==='carrier')?'colocar el buque':'lanzar';
+ var h='<h4>'+it.ico+' '+it.name+' <span class="gold">· '+fmt(c)+' oro</span><button id="bNo" style="float:right;padding:1px 9px">✖</button></h4>'+
+  '<div class="d">'+it.desc+'</div>'+
+  '<div class="s">'+it.rad+': radio '+it.r+(it.rg?' (+'+it.rg+' por nivel)':'')+' · '+it.eff(1)+'</div>';
+ if(cell==null)h+='<div class="s" style="color:#ffd84a">👆 Toca el mapa para elegir el lugar, luego toca <b>2 veces</b> ahí para '+verb+'.</div>';
+ else if(err)h+='<div class="e">'+err+'</div>';
+ else h+='<div class="o">✔ Lugar válido · toca <b>2 veces</b> ahí mismo para '+verb+'</div>';
+ showInfo(h);
+}
+function refreshSel(){
+ if(!selB)return;
+ var b=selB,it=IT[b.t],up=Math.round(it.cost*b.lv*.8),maxed=b.lv>=5;
+ var h='<h4>'+it.ico+' '+it.name+' · Nivel '+b.lv+'/5</h4><div class="d">'+it.desc+'</div>'+
+  '<div class="s">'+it.rad+': radio '+(it.r+it.rg*(b.lv-1))+'<br>Ahora: '+it.eff(b.lv)+(maxed?'':'<br>Siguiente nivel: '+it.eff(b.lv+1)+' · radio '+(it.r+it.rg*b.lv))+'</div>'+
+  '<div class="row">'+(maxed?'<b>Nivel máximo</b>':'<button class="pri" id="bUp"'+(me.gold<up?' disabled':'')+'>Mejorar ('+fmt(up)+')</button>')+
+  '<button id="bSell">Vender (+'+fmt(Math.round(it.cost*b.lv*.4))+')</button><button id="bClose">Cerrar</button></div>';
+ showInfo(h);
+}
+function updateHud(){
+ if(!me)return;
+ $('hT').textContent=fmt(me.troops)+' / '+fmt(me.maxT);
+ $('tfill').style.width=Math.min(100,100*me.troops/me.maxT)+'%';
+ var g=me.growth;
+ $('hG').textContent=(g>=0?'+':'')+fmt(Math.abs(g))+'/s';
+ $('hO').textContent=fmt(me.gold)+' (+'+fmt(me.income)+'/s)';
+ $('hL').textContent=(100*me.cells/LAND_TOTAL).toFixed(1)+'%';
+ $('hR').textContent=Math.floor(me.rp)+' (+'+me.rpRate.toFixed(1)+'/s)';
+ $('bTree').textContent='🌳 Árbol'+(anySkillBuyable()?' •':'');
+ var ri=recruitInfo();$('bRecruit').textContent='📣 Reclutar +'+fmt(ri.amt)+' tropas ('+fmt(ri.cost)+' oro)';
+ var r=P.filter(function(p){return p.alive&&p.spawned}).sort(function(a,b){return b.cells-a.cells});
+ var h='<div class="lbl" style="margin-bottom:2px">Ranking</div>',shown=0,mei=r.indexOf(me);
+ for(var i=0;i<r.length&&i<7;i++){
+  var p=r[i];
+  h+='<div'+(p===me?' class="me"':'')+'><span><i style="background:rgb('+p.c.join(',')+')"></i>'+(i+1)+'. '+(p!==me?(allied(me,p)?'🤝 ':truce(me,p)?'🕊️ ':''):'')+p.name+'</span><span>'+(100*p.cells/LAND_TOTAL).toFixed(1)+'%</span></div>';
+ }
+ if(mei>=7)h+='<div class="me"><span>'+(mei+1)+'. '+me.name+'</span><span>'+(100*me.cells/LAND_TOTAL).toFixed(1)+'%</span></div>';
+ $('rank').innerHTML=h;
+}
+function openTrain(){
+ var l=me.train;
+ var t='<div class="tg2"><div><div class="lvb">NIVEL '+l+' / '+TRAIN_MAX+'</div><div style="color:#c9c5b8;line-height:1.45">La infantería es la base de tu ejército. Entrenarla mejora todo el combate terrestre y naval.</div></div>'+
+  '<div class="s" style="line-height:1.55"><b>Bonos actuales</b><br>⚔️ Ataque: −'+(10*l)+'% de coste por celda<br>🛡️ Defensa: +'+(8*l)+'% de resistencia<br>📈 Crecimiento: +'+(8*l)+'% de tropas/s'+(l<TRAIN_MAX?'<br><span style="color:#e0b04a">Siguiente: −'+(10*(l+1))+'% · +'+(8*(l+1))+'% · +'+(8*(l+1))+'%</span>':'')+'</div></div>';
+ $('trainTxt').innerHTML=t;
+ var b=$('bTrainBuy');
+ if(l>=TRAIN_MAX){b.textContent='Nivel máximo';b.disabled=true}
+ else{b.textContent='Entrenar a nivel '+(l+1)+' ('+fmt(trainCost(l))+')';b.disabled=me.gold<trainCost(l)}
+ $('train').style.display='flex';
+}
+
+/* =============== CÁMARA / ENTRADA =============== */
+var cv=$('cv'),ctx=cv.getContext('2d'),cw=0,ch=0,DPR=1;
+var cam={x:GW/2,y:GH/2,s:2,minS:1,maxS:40};
+function resize(){
+ DPR=ECO?1:Math.min(window.devicePixelRatio||1,1.5);
+ cw=window.innerWidth;ch=window.innerHeight;
+ cv.width=Math.floor(cw*DPR);cv.height=Math.floor(ch*DPR);
+ cam.minS=Math.min(cw/GW,ch/GH);
+ if(cam.s<cam.minS)cam.s=cam.minS;
+}
+function toWorld(sx,sy){return {x:(sx-cw/2)/cam.s+cam.x,y:(sy-ch/2)/cam.s+cam.y}}
+function zoomAt(sx,sy,f){
+ var b=toWorld(sx,sy);
+ cam.s=Math.max(cam.minS,Math.min(cam.maxS,cam.s*f));
+ var a=toWorld(sx,sy);
+ cam.x+=b.x-a.x;cam.y+=b.y-a.y;
+}
+var ptrs={},nptr=0,moved=false,downX=0,downY=0,pinchD=0;
+cv.addEventListener('pointerdown',function(e){
+ try{cv.setPointerCapture(e.pointerId)}catch(x){}
+ ptrs[e.pointerId]={x:e.clientX,y:e.clientY};nptr++;
+ if(nptr===1){moved=false;downX=e.clientX;downY=e.clientY}
+ else if(nptr===2){moved=true;var k=Object.keys(ptrs),a=ptrs[k[0]],b=ptrs[k[1]];pinchD=Math.hypot(a.x-b.x,a.y-b.y)}
+});
+cv.addEventListener('pointermove',function(e){
+ var p=ptrs[e.pointerId];
+ if(!p){
+  return;
+ }
+ var dx=e.clientX-p.x,dy=e.clientY-p.y;
+ if(nptr===1){
+  if(!moved&&Math.hypot(e.clientX-downX,e.clientY-downY)>8)moved=true;
+  if(moved){cam.x-=dx/cam.s;cam.y-=dy/cam.s}
+  p.x=e.clientX;p.y=e.clientY;
+ }else if(nptr>=2){
+  p.x=e.clientX;p.y=e.clientY;
+  var k=Object.keys(ptrs),a=ptrs[k[0]],b=ptrs[k[1]],d=Math.hypot(a.x-b.x,a.y-b.y);
+  if(pinchD>0)zoomAt((a.x+b.x)/2,(a.y+b.y)/2,d/pinchD);
+  pinchD=d;
+ }
+});
+function pend(e,tap){
+ if(!ptrs[e.pointerId])return;
+ if(tap&&nptr===1&&!moved)onTap(e.clientX,e.clientY);
+ delete ptrs[e.pointerId];nptr=Math.max(0,nptr-1);
+ if(nptr===1){moved=true;var k=Object.keys(ptrs);pinchD=0;downX=ptrs[k[0]].x;downY=ptrs[k[0]].y}
+}
+cv.addEventListener('pointerup',function(e){pend(e,true)});
+cv.addEventListener('pointercancel',function(e){pend(e,false)});
+cv.addEventListener('wheel',function(e){e.preventDefault();zoomAt(e.clientX,e.clientY,e.deltaY<0?1.18:1/1.18)},{passive:false});
+
+function slider(){return +$('slider').value/100}
+function sendAmount(){
+ var a=Math.floor(me.troops*slider());
+ if(a<30){toast('No tienes suficientes tropas.');return 0}
+ return a;
+}
+var lastTapT=0,lastTapX=0,lastTapY=0;
+function onTap(sx,sy){
+ var w=toWorld(sx,sy),cx=Math.floor(w.x),cy=Math.floor(w.y);
+ if(cx<0||cy<0||cx>=GW||cy>=GH)return;
+ var i=cy*GW+cx;
+ if(state==='spawn'){
+  if(own[i]!==-1){toast('Elige un punto de tierra libre.');return}
+  var SQ=Math.sqrt(E);
+  spawnPlayer(me,i,Math.max(2,Math.round(3*SQ)));
+  for(var k=1;k<P.length;k++){
+   var b=P[k],c=b.seedCell;
+   if(c>=0&&own[c]===-1)spawnPlayer(b,c,Math.max(2,Math.round(2*SQ)));else{b.alive=false}
+  }
+  state='play';scheduleDisaster(true);scheduleEvent(true);
+  cam.s=Math.max(cam.minS*1.5,Math.min(cam.maxS,15/SQ*Math.max(.7,Math.min(1.3,Math.min(cw,ch)/500))));cam.x=cx;cam.y=cy+ch*.1/cam.s;
+  toast('¡Expándete! Toca la tierra libre vecina para atacar.');
+  refreshBar();
+  return;
+ }
+ if(state!=='play'||paused)return;
+ if(placing){
+  var now=Date.now();
+  if(placing.cell!=null&&now-lastTapT<500&&Math.hypot(sx-lastTapX,sy-lastTapY)<32){
+   lastTapT=0;confirmPlacing();return;
+  }
+  placing.cell=i;lastTapT=now;lastTapX=sx;lastTapY=sy;
+  refreshPlacing();return;
+ }
+ var tol=Math.max(1.4*K,18/cam.s),best=null,bd=1e18;
+ for(var q=0;q<me.bld.length;q++){
+  var b2=me.bld[q],d=dist2(b2.x+.5,b2.y+.5,w.x,w.y);
+  if(d<tol*tol&&d<bd){bd=d;best=b2}
+ }
+ if(best){selS=null;selB=best;refreshSel();return}
+ selB=null;
+ var tolS=Math.max(1.6*K,18/cam.s);
+ if(selS){
+  if(own[i]===-2){
+   if(nearestB(me,'port',i,true)){selS.tx=cx+.5;selS.ty=cy+.5;toast('🚢 En marcha')}
+   else toast('Fuera del alcance de tus puertos.');
+   selS=null;closeInfo();return;
+  }
+  selS=null;closeInfo();
+ }
+ var bs2=null,bd2=1e18;
+ for(var sq=0;sq<ships.length;sq++){
+  var sh2=ships[sq];if(sh2.o!==me.id)continue;
+  var d2=dist2(sh2.x,sh2.y,w.x,w.y);
+  if(d2<tolS*tolS&&d2<bd2){bd2=d2;bs2=sh2}
+ }
+ if(bs2){
+  selS=bs2;
+  showInfo('<h4>'+(bs2.t==='carrier'?'🛳️ Portaaviones':'🚢 Buque')+'</h4><div class="d">'+(bs2.t==='carrier'?'Base aérea flotante: permite bombardear a su alcance.':'Bombardea costas enemigas cercanas y bloquea los puertos enemigos a menos de 8 casillas.')+'</div><div class="s">👆 Toca el mar (dentro del radio de uno de tus puertos) para moverlo.</div><div class="row"><button id="bSink">Desmantelar (+'+Math.round((bs2.t==='carrier'?2000:800)*.4)+')</button><button id="bClose">Cerrar</button></div>');
+  return;
+ }
+ for(var rq=0;rq<RLIST.length;rq++){
+  var nd=RLIST[rq];
+  if(dist2(nd.x+.5,nd.y+.5,w.x,w.y)<=Math.pow(Math.max(1.2*K,16/cam.s),2)){
+   var ow=own[nd.cell];
+   showInfo('<h4>'+RESI[nd.t]+' '+RESN[nd.t]+' · '+nd.name+'</h4><div class="d">'+RESD[nd.t]+'. Lo controla quien posea la celda central.</div><div class="s">Dueño actual: '+(ow>=0?P[ow].name:'nadie')+'</div><div class="row"><button id="bClose">Cerrar</button></div>');
+   break;
+  }
+ }
+ doMode(i);
+}
+function doMode(i){
+ var o=own[i];
+ if(o===-2){toast('Eso es agua.');return}
+ if(o===me.id){toast('Ese territorio ya es tuyo.');return}
+ if(o>=0&&!atWar(me,P[o])){toast('Tienes un pacto con '+P[o].name+'. Rómpelo en 🤝 Pactos para atacarle.');return}
+ if(mode==='terr'){
+  var a=sendAmount();if(!a)return;
+  if(o>=0&&P[o].alive&&o>0&&gt<SPAWN_PROTECT&&P[o].bot&&false){}
+  if(!startAttack(me,o,a))toast('No tienes frontera con ese territorio. Usa el modo naval 🚢 o aéreo ✈️.');
+  else if(tr[i]!==0&&DIS>0)toast('Terreno: '+TR_NAMES[tr[i]]+' · conquistar cuesta ×'+TMUL(tr[i]).toFixed(1));
+ }else if(mode==='naval'){
+  if(!hasB(me,'port')){toast('Necesitas un Puerto para atacar por mar.');return}
+  // buscar costa cercana del objetivo
+  var land=-1,bd=1e9,x0=i%GW,y0=(i/GW)|0;
+  var NR=Math.ceil(6*K);
+  for(var yy=y0-NR;yy<=y0+NR;yy++)for(var xx=x0-NR;xx<=x0+NR;xx++){
+   if(xx<0||yy<0||xx>=GW||yy>=GH)continue;
+   var j=yy*GW+xx;
+   if(own[j]!==o||!isCoast[j])continue;
+   var d=dist2(xx,yy,x0,y0);
+   if(d<bd){bd=d;land=j}
+  }
+  if(land<0){toast('Toca la costa del objetivo.');return}
+  var pt=nearestB(me,'port',land,true);
+  if(!pt){toast('Fuera del alcance de tus puertos.');return}
+  var a2=sendAmount();if(!a2)return;
+  me.troops-=a2;
+  launch('boat',me,pt,land,a2);ach('naval');
+  toast('🚢 Barco en camino');
+ }else{
+  var bc=Math.round(200*me.mod.bombC);
+  if(!hasB(me,'airport')&&!hasCarrier(me)){toast('Necesitas un Aeródromo o un Portaaviones para bombardear.');return}
+  var ap=airOrigin(me,i);
+  if(!ap){toast('Fuera del alcance de tus bases aéreas.');return}
+  if(me.gold<bc){toast('Un bombardeo cuesta '+bc+' de oro.');return}
+  me.gold-=bc;ach('air');
+  launch('bomb',me,ap,i);
+  toast('✈️ Bombardero en camino');
+ }
+}
+function confirmPlacing(){
+ var it=IT[placing.id],cell=placing.cell,err=validate(it,cell);
+ if(err){toast(err);return}
+ var c=costOf(it,me,cell);
+ me.gold-=c;
+ if(it.k==='b'){var b=addBuilding(me,it.id,cell);recalc(me);placing=null;selB=b;snd('build');refreshSel()}
+ else if(it.id==='ship'||it.id==='carrier'){
+  ships.push({o:me.id,t:it.id==='ship'?'ship':'carrier',x:cell%GW+.5,y:((cell/GW)|0)+.5,next:gt+1500,tx:null,ty:null});
+  snd('build');toast(it.id==='ship'?'Buque desplegado (tócalo para moverlo)':'Portaaviones desplegado (tócalo para moverlo)');
+ }else{
+  var from=nearestB(me,'silo',cell,true);
+  launch(it.id==='nuke'?'nuke':'miss',me,from,cell);
+  if(it.id==='nuke')ach('nuke');
+ }
+ refreshBar();
+}
+
+/* =============== DIBUJO =============== */
+function circle(wx,wy,r,fill,stroke,s,ox,oy){
+ ctx.beginPath();ctx.arc(ox+wx*s,oy+wy*s,r*s,0,6.2832);
+ if(fill){ctx.fillStyle=fill;ctx.fill()}
+ if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1.5;ctx.stroke()}
+}
+function draw(){
+ var s=cam.s,ox=cw/2-cam.x*s,oy=ch/2-cam.y*s,i,k,p;
+ ctx.setTransform(DPR,0,0,DPR,0,0);
+ ctx.fillStyle='#071019';ctx.fillRect(0,0,cw,ch);
+ if(dirty){mctx.putImageData(imgdata,0,0);dirty=false}
+ ctx.imageSmoothingEnabled=false;
+ ctx.drawImage(mc,ox,oy,GW*s,GH*s);
+ ctx.textAlign='center';ctx.textBaseline='middle';
+ // anillos
+ if(placing){
+  var it=IT[placing.id];
+  if(it.id==='missile'||it.id==='nuke'){
+   for(k=0;k<me.bld.length;k++)if(me.bld[k].t==='silo'){var sb=me.bld[k];circle(sb.x+.5,sb.y+.5,rad(sb),'rgba(255,90,60,.05)','rgba(255,120,80,.6)',s,ox,oy)}
+  }else if(it.id==='ship'||it.id==='carrier'){
+   for(k=0;k<me.bld.length;k++)if(me.bld[k].t==='port'){var pb=me.bld[k];circle(pb.x+.5,pb.y+.5,rad(pb),'rgba(80,160,255,.06)','rgba(120,190,255,.6)',s,ox,oy)}
+  }
+  if(placing.cell!=null){
+   var gx=placing.cell%GW+.5,gy=((placing.cell/GW)|0)+.5;
+   circle(gx,gy,itR(it),'rgba(255,220,60,.2)','#ffd84a',s,ox,oy);
+   ctx.font=Math.max(14,Math.min(30,s*1.8))+'px sans-serif';ctx.globalAlpha=.8;ctx.fillText(it.ico,ox+gx*s,oy+gy*s);ctx.globalAlpha=1;
+  }
+ }
+ if(selB){circle(selB.x+.5,selB.y+.5,rad(selB),'rgba(90,200,255,.18)','#6cf',s,ox,oy)}
+ // volcanes
+ var vs=Math.max(12,Math.min(24,s*1.4)),k;
+ ctx.font=Math.floor(vs)+'px sans-serif';ctx.fillStyle='#fff';
+ for(k=0;k<VLIST.length&&DIS>0;k++){
+  var vv=VLIST[k],vx=ox+(vv.x+.5)*s,vy=oy+(vv.y+.5)*s;
+  if(vx<-20||vy<-20||vx>cw+20||vy>ch+20)continue;
+  ctx.fillText('🌋',vx,vy);
+ }
+ // recursos
+ var rs=Math.max(11,Math.min(22,s*1.3));
+ if(!(ECO&&s<4)){
+  ctx.font=Math.floor(rs)+'px sans-serif';
+  for(k=0;k<RLIST.length;k++){
+   var nd=RLIST[k],nx=ox+(nd.x+.5)*s,ny=oy+(nd.y+.5)*s;
+   if(nx<-20||ny<-20||nx>cw+20||ny>ch+20)continue;
+   var ow=own[nd.cell];
+   ctx.fillStyle='rgba(0,0,0,.5)';ctx.beginPath();ctx.arc(nx,ny,rs*.62,0,6.2832);ctx.fill();
+   ctx.strokeStyle=ow>=0?'rgb('+P[ow].c.join(',')+')':'rgba(255,255,255,.35)';ctx.lineWidth=2;ctx.stroke();
+   ctx.fillStyle='#fff';ctx.fillText(RESI[nd.t],nx,ny+1);
+  }
+ }
+ // edificios
+ var bs=Math.max(13,Math.min(28,s*1.7));
+ ctx.font=Math.floor(bs*.8)+'px sans-serif';
+ for(i=0;i<P.length;i++){
+  p=P[i];if(!p.alive)continue;
+  for(k=0;k<p.bld.length;k++){
+   var b=p.bld[k],bx=ox+(b.x+.5)*s,by=oy+(b.y+.5)*s;
+   if(bx<-20||by<-20||bx>cw+20||by>ch+20)continue;
+   ctx.fillStyle='rgba(0,0,0,.6)';ctx.beginPath();ctx.arc(bx,by,bs*.55,0,6.2832);ctx.fill();
+   ctx.strokeStyle='rgb('+p.c.join(',')+')';ctx.lineWidth=2;ctx.stroke();
+   ctx.fillStyle='#fff';ctx.fillText(IT[b.t].ico,bx,by+1);
+   if(b.lv>1){ctx.font='bold 9px sans-serif';ctx.fillStyle='#ffd84a';ctx.fillText(b.lv,bx+bs*.5,by-bs*.45);ctx.font=Math.floor(bs*.8)+'px sans-serif'}
+   if(b.blk){ctx.font='11px sans-serif';ctx.fillStyle='#fff';ctx.fillText('🔒',bx-bs*.5,by-bs*.45);ctx.font=Math.floor(bs*.8)+'px sans-serif'}
+  }
+ }
+ // buques
+ for(k=0;k<ships.length;k++){
+  var sh=ships[k];
+  if(sh===selS)circle(sh.x,sh.y,Math.max(1.5,12/s),'rgba(90,200,255,.2)','#6cf',s,ox,oy);
+  if(sh.tx!=null){ctx.strokeStyle='rgba(120,200,255,.5)';ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(ox+sh.x*s,oy+sh.y*s);ctx.lineTo(ox+sh.tx*s,oy+sh.ty*s);ctx.stroke();ctx.setLineDash([])}
+  ctx.font='18px sans-serif';ctx.fillStyle='#fff';ctx.fillText(sh.t==='carrier'?'🛳️':'🚢',ox+sh.x*s,oy+sh.y*s);
+ }
+ // vuelos
+ for(k=0;k<flights.length;k++){
+  var f=flights[k],t=(gt-f.t0)/f.dur;if(t>1)t=1;
+  var fxp=f.x0+(f.x1-f.x0)*t,fyp=f.y0+(f.y1-f.y0)*t;
+  ctx.strokeStyle='rgba(255,255,255,.25)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(ox+f.x0*s,oy+f.y0*s);ctx.lineTo(ox+f.x1*s,oy+f.y1*s);ctx.stroke();ctx.setLineDash([]);
+  ctx.font='16px sans-serif';ctx.fillStyle='#fff';
+  ctx.fillText(f.k==='boat'?'⛵':f.k==='bomb'?'✈️':f.k==='nuke'?'☢️':'🚀',ox+fxp*s,oy+fyp*s);
+ }
+ // efectos
+ for(k=0;k<fx.length;k++){
+  var e=fx[k],tt=(gt-e.t0)/e.dur;if(tt>1)tt=1;
+  if(e.l){ctx.strokeStyle='rgba(255,220,120,'+(1-tt)+')';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ox+e.x0*s,oy+e.y0*s);ctx.lineTo(ox+e.x*s,oy+e.y*s);ctx.stroke();continue}
+  circle(e.x,e.y,e.r*(.3+.7*tt),'rgba('+e.c+','+(.55*(1-tt))+')','rgba('+e.c+','+(1-tt)+')',s,ox,oy);
+ }
+ // avisos de desastres
+ for(k=0;k<dpend.length;k++){
+  var pe=dpend[k],isV=pe.k==='volc',px=(isV?pe.v.x:pe.x)+.5,py=(isV?pe.v.y:pe.y)+.5,pr=isV?pe.v.r*K:pe.r,pulse=.5+.5*Math.sin(gt/150);
+  circle(px,py,pr*(.6+.2*pulse),'rgba('+(isV?'255,60,30':'60,150,255')+','+(.10+.12*pulse)+')',isV?'#ff5a3c':'#5ab4ff',s,ox,oy);
+  ctx.font='18px sans-serif';ctx.fillStyle='#fff';ctx.fillText('⚠️',ox+px*s,oy+py*s-14);
+ }
+ for(k=0;k<storms.length;k++){
+  var sm=storms[k];
+  circle(sm.x,sm.y,4.2*K,'rgba(200,220,255,.12)','rgba(200,220,255,.5)',s,ox,oy);
+  ctx.font='24px sans-serif';ctx.fillStyle='#fff';ctx.fillText('🌀',ox+sm.x*s,oy+sm.y*s);
+ }
+ // nombres
+ for(i=0;i<P.length;i++){
+  p=P[i];if(!p.alive||!p.spawned||p.cells<8*E)continue;
+  var lx=ox+(p.sx/p.cells+.5)*s,ly=oy+(p.sy/p.cells+.5)*s;
+  if(lx<-60||ly<-30||lx>cw+60||ly>ch+30)continue;
+  var fs=Math.max(8,Math.min(34,Math.sqrt(p.cells)*s*1.7/Math.max(4,p.name.length)));
+  if(fs<9.5&&p!==me)continue;
+  ctx.font='bold '+fs+'px sans-serif';ctx.lineWidth=Math.max(2,fs*.18);ctx.strokeStyle='rgba(0,0,0,.75)';ctx.fillStyle='#fff';
+  ctx.strokeText(p.name,lx,ly-fs*.45);ctx.fillText(p.name,lx,ly-fs*.45);
+  ctx.font=Math.floor(fs*.85)+'px sans-serif';
+  var tx=fmt(p.troops);ctx.strokeText(tx,lx,ly+fs*.5);ctx.fillText(tx,lx,ly+fs*.5);
+ }
+}
+
+/* =============== BUCLE =============== */
+var last=0,hudT=0,lastDraw=0;
+function frame(now){
+ requestAnimationFrame(frame);
+ var dt=Math.min(100,now-last);last=now;
+ if(state==='play'&&!paused){
+  acc+=dt*speed;var n=0;
+  while(acc>=100&&n<6){tick();acc-=100;n++}
+  if(acc>300)acc=0;
+ }
+ cam.x=Math.max(0,Math.min(GW,cam.x));cam.y=Math.max(0,Math.min(GH,cam.y));
+ if(!ECO||now-lastDraw>=40){draw();lastDraw=now}
+ hudT+=dt;
+ if(hudT>300){hudT=0;updateHud();if(state==='play'){refreshBar();if(placing)refreshPlacing();else if(selB&&infoOpen&&document.activeElement===document.body)refreshSel()}}
+}
+
+/* =============== EVENTOS DE UI =============== */
+$('bPlay').onclick=function(){this.textContent='Generando mapa...';var self=this;setTimeout(function(){DIFF=+$('diffSel').value;DIS=+$('disSel').value;GMODE=$('modeSel').value;DOCSEL=$('docSel').value;snd('ui');startGame($('nm').value.replace(/[<>&]/g,'').trim()||'Jugador',$('mapSel').value);self.textContent='▶ INICIAR GUERRA'},30)};
+$('bAgain').onclick=function(){$('rankTxt').textContent='Rango: '+RANKS[rankIdx()]+' · '+achCount()+'/'+ACH.length+' logros';$('menu').style.display='flex';$('end').style.display='none';state='menu';document.body.className='menu'};
+$('bPause').onclick=function(){if(state!=='play')return;paused=!paused;$('paused').style.display=paused?'block':'none';this.textContent=paused?'▶':'⏸'};
+$('bSpeed').onclick=function(){speed=speed===1?2:speed===2?3:1;this.textContent='x'+speed};
+$('bTrain').onclick=function(){if(state==='play')openTrain()};
+function recruitInfo(){
+ var room=Math.max(0,me.maxT-me.troops),amt=Math.floor(Math.min(me.maxT*.1,room)),cost=Math.ceil(amt*me.mod.rec);
+ return {amt:amt,cost:cost};
+}
+$('bRecruit').onclick=function(){
+ if(state!=='play'||paused)return;
+ var r=recruitInfo();
+ if(r.amt<20){toast('Tu ejército ya está al máximo.');return}
+ if(me.gold<r.cost){
+  var can=Math.floor(me.gold/me.mod.rec);
+  if(can<20){toast('Necesitas más oro para reclutar.');return}
+  r.amt=can;r.cost=Math.ceil(can*me.mod.rec);
+ }
+ me.gold-=r.cost;me.troops+=r.amt;recalc(me);
+ toast('📣 +'+fmt(r.amt)+' tropas (−'+fmt(r.cost)+' oro)');
+};
+$('bTrainClose').onclick=function(){$('train').style.display='none'};
+$('bTrainBuy').onclick=function(){
+ var l=me.train;if(l>=TRAIN_MAX||me.gold<trainCost(l))return;
+ me.gold-=trainCost(l);me.train++;recalc(me);openTrain();toast('Infantería nivel '+me.train);
+};
+$('slider').oninput=function(){$('aPct').textContent=this.value+'%'};
+$('modes').onclick=function(e){var m=e.target.getAttribute('data-m');if(m&&state==='play')setMode(m)};
+$('bar').onclick=function(e){
+ var t=e.target;while(t&&t!==this&&!t.getAttribute('data-id'))t=t.parentNode;
+ if(!t||t===this||state!=='play')return;
+ var id=t.getAttribute('data-id');
+ if(placing&&placing.id===id){placing=null;setMode(mode);return}
+ placing={id:id,cell:null};selB=null;refreshPlacing();refreshBar();
+};
+$('info').onclick=function(e){
+ var id=e.target.id;
+ if(id==='bNo'){placing=null;setMode(mode)}
+ else if(id==='bOk')confirmPlacing();
+ else if(id==='bClose'){selB=null;selS=null;setMode(mode)}
+ else if(id==='bSink'&&selS){var cs=selS.t==='carrier'?2000:800;me.gold+=Math.round(cs*.4);ships.splice(ships.indexOf(selS),1);selS=null;setMode(mode);refreshBar()}
+ else if(id==='bUp'&&selB){
+  var it=IT[selB.t],c=Math.round(it.cost*selB.lv*.8);
+  if(me.gold>=c&&selB.lv<5){me.gold-=c;selB.lv++;recalc(me);refreshSel();refreshBar()}
+ }else if(id==='bSell'&&selB){
+  var it2=IT[selB.t];me.gold+=Math.round(it2.cost*selB.lv*.4);
+  var b=selB;selB=null;removeBuilding(b);recalc(me);setMode(mode);refreshBar();
+ }
+};
+window.addEventListener('resize',resize);
+
+/* =============== UI EXTRA: HABILIDADES, DIPLOMACIA, LOGROS =============== */
+function openTree(){
+ var h='<div class="lbl ml">// departamento de investigación</div><h4 class="wh">🌳 Árbol de <em>habilidades</em></h4>'+
+  '<div class="lbl" style="margin-bottom:3px">Puntos de investigación (PI): <b class="gold" style="font-size:13px">'+Math.floor(me.rp)+'</b> · +'+me.rpRate.toFixed(1)+'/s</div>'+
+  '<div style="color:#9aa8a5;font-size:10.5px;line-height:1.35">Más PI con 🔬 Laboratorios, 🏙️ ciudades y ⛏️ minas. En los niveles con dos opciones solo puedes elegir una. Cada nivel exige el anterior.</div>';
+ h+='<div class="tgrid"><div></div>';
+ for(var lj=0;lj<5;lj++)h+='<div class="tlv">Nivel '+(lj+1)+' · '+SKC[lj]+' PI</div>';
+ for(var bi=0;bi<BR.length;bi++){
+  var b=BR[bi];
+  h+='<div class="tbh"><span>'+b.ico+'</span>'+b.n+'</div>';
+  for(var li=0;li<b.lv.length;li++){
+   h+='<div class="tcell">';
+   for(var si=0;si<b.lv[li].length;si++){
+    var s2=b.lv[li][si],st=skState(me,s2);
+    h+='<button class="sk '+(st==='own'?'own':st==='av'?'av':st==='poor'?'poor':'lk')+'" data-sk="'+s2.id+'">'+(st==='own'?'<span class="c">✔</span>':st==='bl'?'<span class="c">✖</span>':'')+'<b>'+s2.n+'</b><br>'+s2.d+'</button>';
+   }
+   h+='</div>';
+  }
+ }
+ h+='</div>';
+ $('treeTxt').innerHTML=h;$('tree').style.display='flex';
+}
+function openDip(){
+ var l=P.filter(function(q){return q!==me&&q.alive&&q.spawned}).sort(function(a,b){return b.cells-a.cells});
+ var h='<div class="lbl ml">// ministerio de exteriores</div><h4 class="wh">🤝 Diplo<em>macia</em></h4>'+
+  '<div style="color:#9aa8a5;font-size:10.5px;line-height:1.35">Tregua: 3 min sin atacaros. Alianza: no os atacáis, +4% de oro y tropas por aliado (máx. 3) y podéis ganar juntos si sumáis el 85%. Romper un pacto te marca como traidor y nadie querrá tratar contigo un tiempo.</div>';
+ if(me.traitor>gt)h+='<div class="e" style="color:#ff8b7a;margin:4px 0">Eres un traidor: nadie acepta pactos contigo durante '+Math.ceil((me.traitor-gt)/1000)+' s.</div>';
+ h+='<div class="dgrid">';
+ for(var i=0;i<l.length&&i<30;i++){
+  var q=l[i],al=allied(me,q),tr2=truce(me,q),st,bt;
+  if(al){st='🤝 Aliado';bt='<button data-a="break" data-id="'+q.id+'">Romper alianza</button>'}
+  else if(tr2){st='🕊️ Tregua '+Math.ceil((me.tru[q.id]-gt)/1000)+'s';bt='<button data-a="ally" data-id="'+q.id+'">Alianza</button><button data-a="break" data-id="'+q.id+'">Romper</button>'}
+  else{st='⚔️ En guerra';bt='<button data-a="truce" data-id="'+q.id+'">Tregua</button><button data-a="ally" data-id="'+q.id+'">Alianza</button>'}
+  h+='<div class="dr"><i style="width:9px;height:9px;background:rgb('+q.c.join(',')+')"></i><span class="n">'+q.name+' · '+(100*q.cells/LAND_TOTAL).toFixed(1)+'%<br><span style="color:#9aa8a5;font-size:10px">'+st+'</span></span>'+bt+'</div>';
+ }
+ h+='</div>';
+ if(!l.length)h+='<div style="margin:8px 0">No quedan otros países.</div>';
+ $('dipTxt').innerHTML=h;$('dip').style.display='flex';
+}
+function openAch(){
+ var n=achCount(),h='<div class="lbl ml">// registro de servicio</div><h4 class="wh">🏆 Logros y <em>rango</em></h4>'+
+  '<div class="rkb"><span class="big2">🎖️</span><div style="flex:1"><b class="gold" style="font-size:14px;letter-spacing:1px">'+RANKS[rankIdx()].toUpperCase()+'</b><div style="color:#9aa8a5;font-size:10.5px">'+n+'/'+ACH.length+' logros · '+SV.wins+' victorias en '+SV.games+' partidas · cada rango da +10 PI iniciales</div><div class="pbar"><div style="width:'+Math.round(100*n/ACH.length)+'%"></div></div></div></div>';
+ h+='<div class="agrid">';
+ for(var i=0;i<ACH.length;i++){
+  var a=ACH[i],ok=SV.ach[a[0]];
+  h+='<div class="dr" style="opacity:'+(ok?1:.5)+'"><span style="font-size:20px">'+(ok?a[1]:'🔒')+'</span><span class="n"><b>'+a[2]+'</b><br><span style="color:#9aa8a5;font-size:10.5px">'+a[3]+'</span></span></div>';
+ }
+ h+='</div>';
+ var dk=0;for(var d in SV.daily)dk++;
+ if(dk)h+='<div style="margin-top:6px;color:#9aa8a5;font-size:10.5px">Desafíos diarios superados: '+dk+'</div>';
+ $('achTxt').innerHTML=h;$('ach').style.display='flex';
+}
+function applyPrefs(){
+ document.documentElement.className=(SV.big?'big ':'')+(SV.eco?'eco':'');
+ ECO=!!SV.eco;MUTE=!!SV.mute;
+ $('bSnd').textContent=MUTE?'🔇':'🔊';
+ resize();
+}
+$('bTree').onclick=function(){if(state==='play'){snd('ui');openTree()}};
+$('bDip').onclick=function(){if(state==='play'){snd('ui');openDip()}};
+$('bSnd').onclick=function(){SV.mute=SV.mute?0:1;saveSv();applyPrefs();if(!MUTE)snd('ui')};
+$('bTreeClose').onclick=function(){$('tree').style.display='none'};
+$('bDipClose').onclick=function(){$('dip').style.display='none'};
+$('bAchClose').onclick=function(){$('ach').style.display='none'};
+$('bAch').onclick=function(){openAch()};
+$('treeTxt').onclick=function(e){
+ var t=e.target;while(t&&t!==this&&!t.getAttribute('data-sk'))t=t.parentNode;
+ if(!t||t===this)return;
+ var s=SKM[t.getAttribute('data-sk')],st=skState(me,s);
+ if(st==='av'){buySkill(me,s.id);openTree()}
+ else if(st==='poor')toast('Te faltan '+Math.ceil(SKC[s.l]-me.rp)+' puntos de investigación.');
+ else if(st==='lk')toast('Primero investiga el nivel anterior de esta rama.');
+ else if(st==='bl')toast('Ya elegiste la otra opción de este nivel.');
+};
+$('dipTxt').onclick=function(e){
+ var a=e.target.getAttribute('data-a'),id=e.target.getAttribute('data-id');
+ if(!a)return;
+ var b=P[+id];if(!b||!b.alive)return;
+ if(a==='break')breakDeal(b);else proposeTo(b,a);
+ openDip();
+};
+$('prop').onclick=function(e){
+ if(!propB)return;
+ if(e.target.id==='pYes'){
+  var b=propB.b,k=propB.kind;propB=null;showProp();
+  if(!b.alive)return;
+  if(k==='ally'&&countAllies(me)>=3){toast('Puedes tener como máximo 3 aliados.');return}
+  makeDeal(b,k);
+ }else if(e.target.id==='pNo'){propB=null;showProp()}
+};
+$('ecoChk').onchange=function(){SV.eco=this.checked?1:0;saveSv();applyPrefs()};
+$('bigChk').onchange=function(){SV.big=this.checked?1:0;saveSv();applyPrefs()};
+function refreshDocD(){var d=DOC[$('docSel').value];$('docD').textContent=d.d}
+$('docSel').onchange=refreshDocD;
+$('modeSel').onchange=function(){
+ var v=this.value,t={normal:'Elige mapa, dificultad y doctrina libremente.',daily:'Mapa, doctrina, dificultad y desventaja del día iguales para todos. Se guarda tu mejor tiempo.',cold:'Mapa mundial con superpotencias (EE. UU., Rusia y China), armas nucleares ya disponibles y diplomacia clave.',fire:'Desastres naturales extremos y eventos mundiales el doble de frecuentes.'};
+ $('modeD').textContent=t[v];
+};
+(function(){
+ var h='';for(var k in DOC)h+='<option value="'+k+'">'+DOC[k].n+'</option>';
+ $('docSel').innerHTML=h;refreshDocD();$('modeSel').onchange();
+ $('ecoChk').checked=!!SV.eco;$('bigChk').checked=!!SV.big;
+ $('rankTxt').textContent='Rango: '+RANKS[rankIdx()]+' · '+achCount()+'/'+ACH.length+' logros';
+})();
+
+/* ---- selectores segmentados del menú ---- */
+function buildSeg(selId,boxId,labels){
+ var sel=$(selId),box=$(boxId),h='',i;
+ for(i=0;i<sel.options.length;i++)h+='<button data-v="'+sel.options[i].value+'">'+(labels?labels[i]:sel.options[i].text)+'</button>';
+ box.innerHTML=h;
+ function sync(){var bs=box.children;for(var k=0;k<bs.length;k++)bs[k].className=bs[k].getAttribute('data-v')===sel.value?'on':''}
+ box.onclick=function(e){
+  var t=e.target;while(t&&t!==box&&!t.getAttribute('data-v'))t=t.parentNode;
+  if(!t||t===box)return;
+  sel.value=t.getAttribute('data-v');sync();if(sel.onchange)sel.onchange();snd('ui');
+ };
+ sync();
+}
+function buildMenuSegs(){
+ buildSeg('modeSel','modeSeg',['🎯 Partida libre','📅 Desafío diario','❄️ Guerra Fría','🔥 Mundo en llamas']);
+ buildSeg('mapSel','mapSeg');
+ buildSeg('docSel','docSeg',['⚖️ Equilibrado','⚔️ Terrestre','⚓ Naval','✈️ Aérea','🔬 Tecnocracia','💰 Mercantil']);
+ buildSeg('diffSel','diffSeg',['⭐ Fácil','⭐⭐ Normal','⭐⭐⭐ Difícil']);
+ buildSeg('disSel','disSeg',['🏞️ Liso','⛰️ Normal','🌋 Extremo']);
+}
+/* =============== ARRANQUE =============== */
+(function(){
+ var h='';for(var k in MAPS)h+='<option value="'+k+'">'+MAPS[k].n+'</option>';
+ $('mapSel').innerHTML=h;buildMenuSegs();
+})();
+applyPrefs();
+loadMap('world');
+resize();
+cam.s=cam.minS;
+for(var jj=0;jj<N;jj++)paint(jj);
+dirty=true;
+requestAnimationFrame(frame);
+
+window.__G={
+ X:{buy:buySkill,mods:calcMods,SKM:SKM,propose:proposeTo,breakDeal:breakDeal,dip:dipThink,ev:doEvent,res:function(){return RLIST},ach:function(){return SV.ach},ST:function(){return ST},setSC:function(m){GMODE=m},tree:openTree,dipo:openDip,achv:openAch,hasC:hasCarrier,ships:function(){return ships},atWar:atWar,allied:allied,truce:truce,makeDeal:makeDeal,SC:function(){return SC},eco:function(v){SV.eco=v;applyPrefs()}},
+ get P(){return P},get me(){return me},get state(){return state},get own(){return own},get N(){return N},get GW(){return GW},get GH(){return GH},
+ get K(){return K},get E(){return E},get bAt(){return bAt},
+ sim:function(n){for(var i=0;i<n;i++)tick()},setDiff:function(d){DIFF=d},
+ LAND:function(){return LAND_TOTAL},startAttack:startAttack,cam:cam,setOwner:setOwner,addBuilding:addBuilding,recalc:recalc,
+ D:{erupt:erupt,quake:quake,hurricane:hurricane,tsunami:tsunami,doDisaster:doDisaster,pend:function(){return dpend},storms:function(){return storms},V:function(){return VLIST},Q:function(){return QLIST},H:function(){return HLIST},tr:function(){return tr},setDIS:function(d){DIS=d},sched:scheduleDisaster,next:function(){return nextDis}},flights:function(){return flights},ships:function(){return ships},placing:function(){return placing},start:startGame
+};
+})();
+</script>
+</body>
+</html>
